@@ -12,6 +12,7 @@
     <OutputPath>.</OutputPath>
     <Name>raspi-gameshow</Name>
     <RootNamespace>raspi-gameshow</RootNamespace>
+    <IsWindowsApplication>False</IsWindowsApplication>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -23,6 +24,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="ButtonHandler.py" />
+    <Compile Include="GameObject.py" />
+    <Compile Include="GameManager.py" />
     <Compile Include="PiFaceManager.py" />
     <Compile Include="raspi_gameshow.py" />
   </ItemGroup>
