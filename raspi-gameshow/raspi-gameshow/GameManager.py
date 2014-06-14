@@ -10,6 +10,7 @@ class GameManager(object):
     gameObject = None
     targetFPS = 60
     clock = None
+    buttonHandler = None
 
 
     def __init__(self,initialGameObject,targetFPS):
@@ -31,7 +32,7 @@ class GameManager(object):
 
     def initialize(self):
         pygame.init()
-        self.screen = pygame.display.set_mode((1024,768),pygame.FULLSCREEN|pygame.DOUBLEBUF|pygame.HWSURFACE)
+        self.screen = pygame.display.set_mode((1024,768),pygame.DOUBLEBUF|pygame.HWSURFACE)
         pygame.mouse.set_visible(True)
         background = pygame.Surface(self.screen.get_size())
         background = background.convert()
@@ -62,5 +63,21 @@ class GameManager(object):
                     pygame.display.quit()
                     return
                 elif event.type == KEYDOWN and event.key == K_ESCAPE:
+                    #Event(2-KeyDown {'scancode': 1, 'key': 27, 'unicode': u'\x1b', 'mod': 4096})
                     pygame.display.quit()
                     return
+                elif event.type == KEYDOWN and event.key == K_1:
+                    print event
+                elif event.type == KEYDOWN and event.key == K_2:
+                    print event
+                elif event.type == KEYDOWN and event.key == K_3:
+                    print event
+                elif event.type == KEYDOWN and event.key == K_4:
+                    self.buttonHandler.pressed(0)
+                    print event
+                elif event.type == KEYDOWN and event.key == K_5:
+                    self.buttonHandler.pressed(1)
+                    print event
+                elif event.type == KEYDOWN and event.key == K_6:
+                    self.buttonHandler.pressed(2)
+                    print event

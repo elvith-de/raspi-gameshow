@@ -20,7 +20,7 @@ def adjust_to_correct_appdir():
         import time
         time.sleep(10)
         sys.exit(1)
-adjust_to_correct_appdir()
+#adjust_to_correct_appdir()
 
 import PiFaceManager
 import ButtonHandler
@@ -93,7 +93,11 @@ def testColor():
 def main():
     gameObject = GameObject.GameObject()
     gameManager = GameManager.GameManager(gameObject,60)
+    handler = ButtonHandler.ButtonHandler()
+    piFaceManager = PiFaceManager.PiFaceManager(handler)
+    gameManager.buttonHandler = handler
     gameManager.run()
+    piFaceManager.deactivate()
 
 if __name__ == '__main__':
     #testInput()
