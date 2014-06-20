@@ -3,8 +3,6 @@ from pygame.locals import *
 import time
 
 
-current_milli_time = lambda: int(round(time.time() * 1000))
-
 class GameManager(object):
     screen = None
     gameObject = None
@@ -47,16 +45,12 @@ class GameManager(object):
         self.clock = pygame.time.Clock()
 
     def run(self):
-        currentMillis = 0
-        lastRun = current_milli_time()
-        actRun = current_milli_time()
         while 1:
-            self.clock.tick(self.targetFPS)
-            actRun = current_milli_time()
-            currentMillis = actRun - lastRun
-            lastRun = actRun
+            currentMillis = self.clock.tick(self.targetFPS)
             self.update(currentMillis)
             self.draw()
+            pygame.display.flip()
+
         #Handle Input Events - FOR TESTING ONLY - Events have to be checked by the GameObjects...
             for event in pygame.event.get():
                 if event.type == QUIT:

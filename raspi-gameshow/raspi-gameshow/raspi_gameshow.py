@@ -91,8 +91,10 @@ def testColor():
     piFaceManager.deactivate()
 
 def main():
-    gameObject = GameObject.GameObject()
-    gameManager = GameManager.GameManager(gameObject,60)
+    gameManager = GameManager.GameManager(GameObject.GameObject(),60)
+    gameObject = GameObject.LoaderGameObject()
+    gameObject.gameManager = gameManager
+    gameManager.setActualGameObject(gameObject)
     handler = ButtonHandler.ButtonHandler()
     piFaceManager = PiFaceManager.PiFaceManager(handler)
     gameManager.buttonHandler = handler

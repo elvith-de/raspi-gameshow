@@ -28,6 +28,7 @@
     <Compile Include="GameManager.py" />
     <Compile Include="PiFaceManager.py" />
     <Compile Include="raspi_gameshow.py" />
+    <Compile Include="__init__.py" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />
 </Project>

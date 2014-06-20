@@ -3,7 +3,7 @@ piFaceAvail = True
 try:
     import pifacedigitalio  
 except:
-    print "Module pifacedigitalio could not be imported - programm will continue for testing on a PC, but might not work right..."
+    print "Warning: Module 'pifacedigitalio' could not be imported - please install the piface libraries and make sure to run on a raspi, you can use the keyboard instead"
     piFaceAvail = False
 
 # translate colors to pins. PiFace doesn't have PWM, but still some colors can be mixed on a RGB led...
