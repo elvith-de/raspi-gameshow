@@ -6,13 +6,14 @@ class GameObject(object):
 
     initialized = False
     gameManager = None
+
     def __init__(self):
         return super(GameObject, self).__init__()
 
-    def update(self,time):
+    def update(self,time,events):
         pass
 
-    def draw(self):
+    def draw(self,screen):
         pass
 
     def initialize(self):
@@ -37,21 +38,22 @@ class LoaderGameObject(GameObject):
         size = font.size("Loading...")
         self.background.blit(text,(((1024-size[0])/2,(768-size[1]-10))))
         super(LoaderGameObject,self).initialize()
-    def update(self,time):
+    def update(self,time,events):
+        self.gameManager.drawHUD = False
         pass
-    def draw(self):
-        print "blit"
-        self.gameManager.screen.blit(self.background,(0,0))
+    def draw(self,screen):
+        screen.blit(self.background,(0,0))
 
-class SimpleQuestionGameObject(GameObject):
+class WhoIsLyingGameObject(GameObject):
     def __init__(self):
         return super(SimpleQuestionGameObject, self).__init__()
 
-    def draw(self):
+    def draw(self,screen):
         super(SimpleQuestionGameObject, self).draw()
 
-    def update(self, time):
+    def update(self, time,events):
         super(SimpleQuestionGameObject, self).update(time)
+        self.gameManager.drawHUD = True
 
     def initialize(self):
 

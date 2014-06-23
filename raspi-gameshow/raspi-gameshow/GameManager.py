@@ -1,6 +1,7 @@
 import pygame
 from pygame.locals import *
 import time
+import HUD
 
 
 class GameManager(object):
@@ -9,7 +10,8 @@ class GameManager(object):
     targetFPS = 60
     clock = None
     buttonHandler = None
-
+    hud = HUD.HUD()
+    drawHUD = True
 
     def __init__(self,initialGameObject,targetFPS):
         self.gameObject = initialGameObject
@@ -22,11 +24,14 @@ class GameManager(object):
             gameObject.initialize()
         self.gameObject = gameObject
 
-    def update(self,time):
-        self.gameObject.update(time)
+    def update(self,time,events):
+        self.gameObject.update(time,events)
+        self.hud.update(time,events)
 
     def draw(self):
-        self.gameObject.draw()
+        self.gameObject.draw(self.screen)
+        if self.drawHUD:
+            self.hud.draw(self.screen)
 
     def initialize(self):
         pygame.init()
@@ -43,35 +48,21 @@ class GameManager(object):
         print "Driver Info:"
         print pygame.display.Info()
         self.clock = pygame.time.Clock()
+        self.hud.initialize()
 
     def run(self):
         while 1:
             currentMillis = self.clock.tick(self.targetFPS)
-            self.update(currentMillis)
+            events = pygame.event.get()
+            self.update(currentMillis,events)
             self.draw()
             pygame.display.flip()
 
         #Handle Input Events - FOR TESTING ONLY - Events have to be checked by the GameObjects...
-            for event in pygame.event.get():
+            for event in events:
                 if event.type == QUIT:
                     pygame.display.quit()
                     return
                 elif event.type == KEYDOWN and event.key == K_ESCAPE:
-                    #Event(2-KeyDown {'scancode': 1, 'key': 27, 'unicode': u'\x1b', 'mod': 4096})
                     pygame.display.quit()
                     return
-                elif event.type == KEYDOWN and event.key == K_1:
-                    print event
-                elif event.type == KEYDOWN and event.key == K_2:
-                    print event
-                elif event.type == KEYDOWN and event.key == K_3:
-                    print event
-                elif event.type == KEYDOWN and event.key == K_4:
-                    self.buttonHandler.pressed(0)
-                    print event
-                elif event.type == KEYDOWN and event.key == K_5:
-                    self.buttonHandler.pressed(1)
-                    print event
-                elif event.type == KEYDOWN and event.key == K_6:
-                    self.buttonHandler.pressed(2)
-                    print event

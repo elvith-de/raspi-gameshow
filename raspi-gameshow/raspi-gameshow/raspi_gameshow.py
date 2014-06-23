@@ -20,7 +20,7 @@ def adjust_to_correct_appdir():
         import time
         time.sleep(10)
         sys.exit(1)
-#adjust_to_correct_appdir()
+adjust_to_correct_appdir()
 
 import PiFaceManager
 import ButtonHandler
@@ -91,7 +91,7 @@ def testColor():
     piFaceManager.deactivate()
 
 def main():
-    gameManager = GameManager.GameManager(GameObject.GameObject(),60)
+    gameManager = GameManager.GameManager(GameObject.GameObject(),30)
     gameObject = GameObject.LoaderGameObject()
     gameObject.gameManager = gameManager
     gameManager.setActualGameObject(gameObject)
