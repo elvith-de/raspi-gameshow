@@ -90,14 +90,13 @@ def testColor():
     print "cleaning up and ending program..."
     piFaceManager.deactivate()
 
-def main():
-    gameManager = GameManager.GameManager(GameObject.GameObject(),30)
-    gameObject = GameObject.LoaderGameObject()
-    gameObject.gameManager = gameManager
-    gameManager.setActualGameObject(gameObject)
+def main():    
     handler = ButtonHandler.ButtonHandler()
     piFaceManager = PiFaceManager.PiFaceManager(handler)
-    gameManager.buttonHandler = handler
+    gameManager = GameManager.GameManager(GameObject.GameObject(),30,handler,piFaceManager)
+    gameObject = GameObject.LoaderGameObject()
+    gameManager.setActualGameObject(gameObject)
+
     gameManager.run()
     piFaceManager.deactivate()
 

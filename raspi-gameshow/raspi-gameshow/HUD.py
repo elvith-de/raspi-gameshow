@@ -38,13 +38,26 @@ class HUD(object):
             for point in range(1,self.bo5_yellow_val+1):
                 screen.blit(self.bo5_yellow_dot,(731+(point)*3+40*(point-1),768-self.bo5_yellow_dot.get_height()-3-5))
 
-    def reset_values(self,reset_score):
+    def reset_values(self,reset_score=False,bo5_visible=False):
         if reset_score:
             self.score_blue = 0
             self.score_yellow = 0
-        self.bo5_visible = False
+        self.bo5_visible = bo5_visible
         self.bo5_blue_val = 0
         self.bo5_yellow_val = 0
+
+    def set_bo5score(self,player,score):
+        if not (score > 5 or score < 0):
+            if player == 0:
+                self.bo5_blue_val = score
+            else:
+                self.bo5_yellow_val = score
+
+    def get_bo5score(self,player):
+        if player == 0:
+            return self.bo5_blue_val
+        else:
+            return self.bo5_yellow_val
     
     def set_score(self,player,score):
         if player == 0:

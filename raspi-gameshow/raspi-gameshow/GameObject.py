@@ -1,5 +1,7 @@
 import pygame
+from pygame.locals import *
 import os
+
 
 
 class GameObject(object):
@@ -23,7 +25,6 @@ class GameObject(object):
 class LoaderGameObject(GameObject):
     background = None
     def __init__(self):
-        self.initialize()
         return super(LoaderGameObject, self).__init__()
 
     def initialize(self):
@@ -37,24 +38,65 @@ class LoaderGameObject(GameObject):
         text = font.render("Loading...",True,(255,255,255)).convert_alpha()
         size = font.size("Loading...")
         self.background.blit(text,(((1024-size[0])/2,(768-size[1]-10))))
+        pygame.time.set_timer(USEREVENT+1,2000)
         super(LoaderGameObject,self).initialize()
+
     def update(self,time,events):
         self.gameManager.drawHUD = False
-        pass
+        for event in events:
+            if event.type == USEREVENT+1:
+                self.gameManager.setActualGameObject(ButtonCheckGameObject())
+
+        
     def draw(self,screen):
         screen.blit(self.background,(0,0))
 
-class WhoIsLyingGameObject(GameObject):
+class ButtonCheckGameObject(GameObject):
+    background = None
+    font = None
+    button = 0
+    text = "press buzzer"
+    color = (0,0,0)
+    textColor = (255,255,255)
+
     def __init__(self):
-        return super(SimpleQuestionGameObject, self).__init__()
+        return super(ButtonCheckGameObject, self).__init__()
 
     def draw(self,screen):
-        super(SimpleQuestionGameObject, self).draw()
+        size = self.font.size(self.text)
+        textSf = self.font.render(self.text,True,self.textColor).convert_alpha()
+        self.background.fill(self.color)
+        self.background.blit(textSf,((1024-size[0])/2,(768-size[1])/2))
+        screen.blit(self.background,(0,0))
+        super(ButtonCheckGameObject, self).draw(screen)
 
     def update(self, time,events):
-        super(SimpleQuestionGameObject, self).update(time)
-        self.gameManager.drawHUD = True
-
+        for event in events:
+            if event.type == KEYDOWN and event.key == K_1:
+                self.text = "Player 1"
+                self.color = (0,0,255)
+                self.textColor = (255,255,255)
+                pygame.time.set_timer(USEREVENT+1,2000)
+                self.gameManager.hud.set_score(0,self.gameManager.hud.get_score(0)+128)
+                self.gameManager.hud.set_bo5score(0,self.gameManager.hud.get_bo5score(0)+1)
+            elif event.type == KEYDOWN and event.key == K_2:
+                self.text = "Player 2"
+                self.color = (255,255,0)
+                self.textColor = (0,0,0)
+                pygame.time.set_timer(USEREVENT+1,2000)
+                self.gameManager.hud.set_score(1,self.gameManager.hud.get_score(1)+128)
+                self.gameManager.hud.set_bo5score(1,self.gameManager.hud.get_bo5score(1)+1)
+            elif event.type == USEREVENT+1:
+                self.text = "press buzzer"
+                self.color = (0,0,0)
+                self.textColor = (255,255,255)
+                self.gameManager.buttonHandler.unlock()
+        super(ButtonCheckGameObject, self).update(time,events)
+        
     def initialize(self):
-
-        super(SimpleQuestionGameObject, self).initialize()
+        self.gameManager.drawHUD = True
+        self.gameManager.hud.reset_values(True,True)
+        self.background = pygame.surface.Surface((1024,768)).convert()
+        self.background.fill(self.color)
+        self.font = pygame.font.Font(pygame.font.get_default_font(),45)
+        super(ButtonCheckGameObject, self).initialize()

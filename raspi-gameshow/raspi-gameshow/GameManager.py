@@ -12,15 +12,19 @@ class GameManager(object):
     buttonHandler = None
     hud = HUD.HUD()
     drawHUD = True
+    piFaceManager = None
 
-    def __init__(self,initialGameObject,targetFPS):
+    def __init__(self,initialGameObject,targetFPS,buttonHandler,piFaceManager):
         self.gameObject = initialGameObject
         self.targetFPS = targetFPS
+        self.buttonHandler = buttonHandler
+        self.piFaceManager = piFaceManager
         self.initialize()
         return super(GameManager, self).__init__()
 
     def setActualGameObject(self,gameObject):
         if not gameObject.initialized:
+            gameObject.gameManager = self
             gameObject.initialize()
         self.gameObject = gameObject
 

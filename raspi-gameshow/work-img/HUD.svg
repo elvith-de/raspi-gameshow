@@ -15,9 +15,16 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.48.2 r9819"
-   sodipodi:docname="Neues Dokument 1">
+   sodipodi:docname="HUD.svg">
   <defs
      id="defs4">
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : 526.18109 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="744.09448 : 526.18109 : 1"
+       inkscape:persp3d-origin="372.04724 : 350.78739 : 1"
+       id="perspective3841" />
     <linearGradient
        id="linearGradient3833">
       <stop
@@ -76,11 +83,11 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1.979899"
-     inkscape:cx="205.76083"
-     inkscape:cy="727.32515"
+     inkscape:zoom="1.0024361"
+     inkscape:cx="738.40002"
+     inkscape:cy="643.14186"
      inkscape:document-units="px"
-     inkscape:current-layer="layer1"
+     inkscape:current-layer="g3874"
      showgrid="false"
      inkscape:window-width="1920"
      inkscape:window-height="1017"
@@ -108,12 +115,129 @@
        d="m 129.64286,167.00503 238.57143,0 c 0,0 0.19494,41.731 -24.0934,41.731 l -190.77267,0 c -23.239,0 -23.70536,-41.731 -23.70536,-41.731 z"
        id="path2987"
        inkscape:connector-curvature="0"
-       sodipodi:nodetypes="ccccc" />
+       sodipodi:nodetypes="ccccc"
+       inkscape:export-filename="D:\Entwicklung\raspi-gameshow\raspi-gameshow\work-img\score_yellow.png"
+       inkscape:export-xdpi="93.910004"
+       inkscape:export-ydpi="93.910004" />
     <path
        sodipodi:nodetypes="ccccc"
        inkscape:connector-curvature="0"
        id="path3829"
        d="m 155.35715,444.14789 238.57143,0 c 0,0 0.19494,41.731 -24.0934,41.731 l -190.77267,0 c -23.239,0 -23.70536,-41.731 -23.70536,-41.731 z"
-       style="fill:url(#linearGradient3831);fill-opacity:1;stroke:#4699ac;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+       style="fill:url(#linearGradient3831);fill-opacity:1;stroke:#4699ac;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       inkscape:export-filename="D:\Entwicklung\raspi-gameshow\raspi-gameshow\work-img\score_blue.png"
+       inkscape:export-xdpi="93.910004"
+       inkscape:export-ydpi="93.910004" />
+    <g
+       id="g3867"
+       transform="matrix(0.26033057,0,0,0.26033057,454,204.40016)"
+       inkscape:export-filename="D:\Entwicklung\raspi-gameshow\raspi-gameshow\work-img\bo5-board_blue.png"
+       inkscape:export-xdpi="155.57129"
+       inkscape:export-ydpi="155.57129">
+      <rect
+         y="954.35236"
+         x="1.9901968"
+         height="96.019608"
+         width="96.019608"
+         id="rect3857"
+         style="fill:#eaeaff;fill-opacity:1;stroke:#0000ff;stroke-width:3.98039365;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0" />
+      <rect
+         style="fill:#eaeaff;fill-opacity:1;stroke:#0000ff;stroke-width:3.98039365;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+         id="rect3859"
+         width="96.019608"
+         height="96.019608"
+         x="97.990196"
+         y="954.35242" />
+      <rect
+         style="fill:#eaeaff;fill-opacity:1;stroke:#0000ff;stroke-width:3.98039365;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+         id="rect3861"
+         width="96.019608"
+         height="96.019608"
+         x="193.9902"
+         y="954.35236" />
+      <rect
+         y="954.35242"
+         x="289.9902"
+         height="96.019608"
+         width="96.019608"
+         id="rect3863"
+         style="fill:#eaeaff;fill-opacity:1;stroke:#0000ff;stroke-width:3.98039365;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0" />
+      <rect
+         style="fill:#eaeaff;fill-opacity:1;stroke:#0000ff;stroke-width:3.98039365;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+         id="rect3865"
+         width="96.019608"
+         height="96.019608"
+         x="385.9902"
+         y="954.35236" />
+    </g>
+    <g
+       transform="matrix(0.26033057,0,0,0.26033057,454,-75.59984)"
+       id="g3874"
+       style="fill:#fffee1;fill-opacity:1;stroke:#fcff00;stroke-opacity:1;stroke-width:0.99873019;stroke-miterlimit:4;stroke-dasharray:none"
+       inkscape:export-filename="D:\Entwicklung\raspi-gameshow\raspi-gameshow\work-img\bo5-board_yellow.png"
+       inkscape:export-xdpi="155.57129"
+       inkscape:export-ydpi="155.57129">
+      <rect
+         style="fill:#fffee1;fill-opacity:1;stroke:#fcff00;stroke-width:0.99873019;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+         id="rect3876"
+         width="96.019608"
+         height="96.019608"
+         x="1.9901968"
+         y="954.35236" />
+      <rect
+         y="954.35242"
+         x="97.990196"
+         height="96.019608"
+         width="96.019608"
+         id="rect3878"
+         style="fill:#fffee1;fill-opacity:1;stroke:#fcff00;stroke-width:0.99873019;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0" />
+      <rect
+         y="954.35236"
+         x="193.9902"
+         height="96.019608"
+         width="96.019608"
+         id="rect3880"
+         style="fill:#fffee1;fill-opacity:1;stroke:#fcff00;stroke-width:0.99873019;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0" />
+      <rect
+         style="fill:#fffee1;fill-opacity:1;stroke:#fcff00;stroke-width:0.99873019;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+         id="rect3882"
+         width="96.019608"
+         height="96.019608"
+         x="289.9902"
+         y="954.35242" />
+      <rect
+         y="954.35236"
+         x="385.9902"
+         height="96.019608"
+         width="96.019608"
+         id="rect3884"
+         style="fill:#fffee1;fill-opacity:1;stroke:#fcff00;stroke-width:0.99873019;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0" />
+    </g>
+    <path
+       sodipodi:type="arc"
+       style="fill:#ffc500;fill-opacity:1;stroke:none"
+       id="path3886"
+       sodipodi:cx="466.42532"
+       sodipodi:cy="185.9796"
+       sodipodi:rx="7.9549513"
+       sodipodi:ry="7.9549513"
+       d="m 474.38027,185.9796 a 7.9549513,7.9549513 0 1 1 -15.9099,0 7.9549513,7.9549513 0 1 1 15.9099,0 z"
+       transform="matrix(1.1942248,0,0,1.1942248,-88.047772,-68.589756)"
+       inkscape:export-filename="D:\Entwicklung\raspi-gameshow\raspi-gameshow\work-img\bo5-dot_yellow.png"
+       inkscape:export-xdpi="184.74001"
+       inkscape:export-ydpi="184.74001" />
+    <path
+       transform="matrix(1.1942248,0,0,1.1942248,-91.126283,211.0782)"
+       d="m 474.38027,185.9796 a 7.9549513,7.9549513 0 1 1 -15.9099,0 7.9549513,7.9549513 0 1 1 15.9099,0 z"
+       sodipodi:ry="7.9549513"
+       sodipodi:rx="7.9549513"
+       sodipodi:cy="185.9796"
+       sodipodi:cx="466.42532"
+       id="path3888"
+       style="fill:#03008a;fill-opacity:1;stroke:none"
+       sodipodi:type="arc"
+       inkscape:export-filename="D:\Entwicklung\raspi-gameshow\raspi-gameshow\work-img\bo5-dot_blue.png"
+       inkscape:export-xdpi="184.74001"
+       inkscape:export-ydpi="184.74001" />
   </g>
 </svg>
