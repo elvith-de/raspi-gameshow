@@ -6,6 +6,7 @@ import HUD
 
 class GameManager(object):
     screen = None
+    buffer = None
     gameObject = None
     targetFPS = 60
     clock = None
@@ -24,6 +25,7 @@ class GameManager(object):
 
     def setActualGameObject(self,gameObject):
         if not gameObject.initialized:
+            pygame.time.set_timer(USEREVENT+1,0)
             gameObject.gameManager = self
             gameObject.initialize()
         self.gameObject = gameObject
@@ -33,18 +35,22 @@ class GameManager(object):
         self.hud.update(time,events)
 
     def draw(self):
-        self.gameObject.draw(self.screen)
+        '''Draws current GameObject. 
+        Since fbcon seems to have most performance on raspi but doesn't support double buffering, 
+        a surface is used to simulate double buffering to prevent flickering (won't solve all problems though)'''
+        self.gameObject.draw(self.buffer)
         if self.drawHUD:
-            self.hud.draw(self.screen)
+            self.hud.draw(self.buffer)
+        self.screen.blit(self.buffer,(0,0))
 
     def initialize(self):
         pygame.init()
         self.screen = pygame.display.set_mode((1024,768),pygame.DOUBLEBUF|pygame.HWSURFACE)
         pygame.mouse.set_visible(True)
-        background = pygame.Surface(self.screen.get_size())
-        background = background.convert()
-        background.fill((250, 0, 250))
-        self.screen.blit(background, (0, 0))
+        self.buffer = pygame.Surface(self.screen.get_size())
+        self.buffer = self.buffer.convert()
+        self.buffer.fill((250, 0, 250))
+        self.screen.blit(self.buffer, (0, 0))
         pygame.display.flip()
         print "Using driver",pygame.display.get_driver()
         print "Set SDL_VIDEODRIVER to change"
