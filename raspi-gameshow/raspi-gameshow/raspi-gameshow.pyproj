@@ -26,6 +26,7 @@
     <Compile Include="ButtonHandler.py" />
     <Compile Include="GameObject.py" />
     <Compile Include="GameManager.py" />
+    <Compile Include="GameStateSaver.py" />
     <Compile Include="HUD.py" />
     <Compile Include="PiFaceManager.py" />
     <Compile Include="raspi_gameshow.py" />

@@ -27,6 +27,7 @@ import ButtonHandler
 import GameManager
 import GameObject
 import time
+import GameStateSaver
 
 def testInput():
     handler = ButtonHandler.ButtonHandler()
@@ -95,8 +96,8 @@ def main():
     piFaceManager = PiFaceManager.PiFaceManager(handler)
     gameManager = GameManager.GameManager(GameObject.GameObject(),30,handler,piFaceManager)
     gameObject = GameObject.LoaderGameObject()
-    gameManager.setActualGameObject(gameObject)
-
+    gameManager.setCurrentGameObject(gameObject)
+    gameManager.gameState = GameStateSaver.GameStateSaver()
     gameManager.run()
     piFaceManager.deactivate()
 

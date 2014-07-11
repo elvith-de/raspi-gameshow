@@ -14,9 +14,22 @@ class ButtonHandler(object):
         self.piFaceManager.setPlayerButtonColor(0,"off", False)
 
     def pressed(self,pin_num):
-        if pin_num == 2 and self.isLocked:
+        '''
+        Pin 1 = Spieler 1
+        Pin 2 = Spieler 2
+        Pin 3 = nur Reset
+        Pin 4 = Richtig + Reset
+        Pin 5 = Falsch + Reset
+        '''
+        if pin_num >= 2 and self.isLocked:
             self.unlock()
-            event = pygame.event.Event(KEYDOWN,scancode=4,key=51,unicode=u'3', mod=4096)
+            event = None
+            if pin_num == 2:
+                event = pygame.event.Event(KEYDOWN,scancode=4,key=51,unicode=u'3', mod=4096)
+            elif pin_num == 3:
+                event = pygame.event.Event(KEYDOWN,scancode=5,key=52,unicode=u'4', mod=4096)
+            elif pin_num == 4:
+                event = pygame.event.Event(KEYDOWN,scancode=6,key=53,unicode=u'5', mod=4096)
             pygame.event.post(event)
         elif not self.isLocked and pin_num < 2:
             self.isLocked = True

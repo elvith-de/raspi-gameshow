@@ -53,6 +53,8 @@ class PiFaceManager(object):
             self.buttonListener.register(0, pifacedigitalio.IODIR_FALLING_EDGE, self.buttonPressed)
             self.buttonListener.register(1, pifacedigitalio.IODIR_FALLING_EDGE, self.buttonPressed)
             self.buttonListener.register(2, pifacedigitalio.IODIR_FALLING_EDGE, self.buttonPressed)
+            self.buttonListener.register(3, pifacedigitalio.IODIR_FALLING_EDGE, self.buttonPressed)
+            self.buttonListener.register(4, pifacedigitalio.IODIR_FALLING_EDGE, self.buttonPressed)
             self.buttonListener.activate()
         return super(PiFaceManager, self).__init__()
 

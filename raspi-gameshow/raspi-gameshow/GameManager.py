@@ -14,6 +14,7 @@ class GameManager(object):
     hud = HUD.HUD()
     drawHUD = True
     piFaceManager = None
+    gameState = None
 
     def __init__(self,initialGameObject,targetFPS,buttonHandler,piFaceManager):
         self.gameObject = initialGameObject
@@ -23,12 +24,13 @@ class GameManager(object):
         self.initialize()
         return super(GameManager, self).__init__()
 
-    def setActualGameObject(self,gameObject):
+    def setCurrentGameObject(self,gameObject):
         if not gameObject.initialized:
             pygame.time.set_timer(USEREVENT+1,0)
             gameObject.gameManager = self
             gameObject.initialize()
         self.gameObject = gameObject
+        gameObject.switchedTo()
 
     def update(self,time,events):
         self.gameObject.update(time,events)

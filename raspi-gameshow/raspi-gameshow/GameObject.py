@@ -6,11 +6,16 @@ import os
 
 
 
-
 class GameObject(object):
 
     initialized = False
     gameManager = None
+    background = None
+    P1PressedSf = None
+    P2PressedSf = None
+    showP1Pressed = False
+    showP2Pressed = False
+    objectLocked = False
 
     def __init__(self):
         return super(GameObject, self).__init__()
@@ -19,14 +24,29 @@ class GameObject(object):
         pass
 
     def draw(self,screen):
-        pass
-
+        if self.showP1Pressed:
+            screen.blit(self.P1PressedSf,(312,234))
+        if self.showP2Pressed:
+            screen.blit(self.P2PressedSf,(312,234))
+    
     def initialize(self):
+        font = pygame.font.Font(pygame.font.get_default_font(),45)
+        self.P1PressedSf = pygame.surface.Surface((400,300)).convert()
+        self.P1PressedSf.fill((0,0,255))
+        size = font.size("Team Blau")
+        self.P1PressedSf.blit(font.render("Team Blau",True,(255,255,255)),((400-size[0])/2,(300-size[1])/2))
+        self.P2PressedSf = pygame.surface.Surface((400,300)).convert()
+        self.P2PressedSf.fill((255,255,0))
+        size = font.size("Team Gelb")
+        self.P2PressedSf.blit(font.render("Team Gelb",True,(0,0,0)),((400-size[0])/2,(300-size[1])/2))
         self.initialized = True
+
+    def switchedTo(self):
+        pass
 
 
 class LoaderGameObject(GameObject):
-    background = None
+    
     def __init__(self):
         return super(LoaderGameObject, self).__init__()
 
@@ -45,18 +65,22 @@ class LoaderGameObject(GameObject):
         super(LoaderGameObject,self).initialize()
 
     def update(self,time,events):
-        self.gameManager.drawHUD = False
         for event in events:
             if event.type == USEREVENT+1:
-                #self.gameManager.setActualGameObject(ButtonCheckGameObject())
-                self.gameManager.setActualGameObject(MenuGameObject(["intakt","Action","Bilder","Wer lügt?","Blatest"]))
+                #self.gameManager.setCurrentGameObject(ButtonCheckGameObject())
+                self.gameManager.gameState.menu = MenuGameObject(["intakt","Action","Bilder","Wer lügt?","Blatest"])
+                self.gameManager.setCurrentGameObject(self.gameManager.gameState.menu)
 
         
     def draw(self,screen):
         screen.blit(self.background,(0,0))
 
+    def switchedTo(self):
+        self.gameManager.drawHUD = False
+        self.gameManager.hud.bo5_visible = False
+
 class ButtonCheckGameObject(GameObject):
-    background = None
+    
     font = None
     button = 0
     text = "press buzzer"
@@ -99,16 +123,19 @@ class ButtonCheckGameObject(GameObject):
         super(ButtonCheckGameObject, self).update(time,events)
         
     def initialize(self):
-        self.gameManager.drawHUD = True
         self.gameManager.hud.reset_values(True,True)
         self.background = pygame.surface.Surface((1024,768)).convert()
         self.background.fill(self.color)
         self.font = pygame.font.Font(pygame.font.get_default_font(),45)
         super(ButtonCheckGameObject, self).initialize()
 
+    def switchedTo(self):
+        self.gameManager.drawHUD = True
+        self.gameManager.hud.bo5_visible = True
+
 class MenuGameObject(GameObject):
 
-    background = None
+    
     categoryField = []
     categoryLock = []
     categoryText = None
@@ -155,8 +182,6 @@ class MenuGameObject(GameObject):
         super(MenuGameObject,self).initialize()
 
     def update(self,time,events):
-        self.gameManager.drawHUD = True
-        self.gameManager.hud.bo5_visible = False
         for event in events:
             if event.type == KEYDOWN and event.key == K_RIGHT:
                 if self.currentSelection[0] < 4:
@@ -174,12 +199,9 @@ class MenuGameObject(GameObject):
                 if not self.categoryLock[self.currentSelection[0]][self.currentSelection[1]]:
                     #start according gameObject
                     print "Starting",self.currentSelection
-                    if self.test == (255,255,0):
-                        self.test = (0,0,255)
-                    else:
-                        self.test = (255,255,0)
-                    self.categoryField[self.currentSelection[0]][self.currentSelection[1]] = self.get_Field_Surface(((self.currentSelection[1]+1)*100),self.test,(0,0,0))
                     self.categoryLock[self.currentSelection[0]][self.currentSelection[1]] = True
+                    self.gameManager.gameState.lastGame = self.currentSelection
+                    self.gameManager.setCurrentGameObject(SingleImageGameObject(None,(self.currentSelection[1]+1)*100))
 
     def draw(self, screen):
         screen.blit(self.background,(0,0))
@@ -197,3 +219,75 @@ class MenuGameObject(GameObject):
             for row in range(5):    
                 y = 173+row*85+row*15
                 screen.blit(self.categoryField[col][row],(x,y))
+
+    def switchedTo(self):
+        self.gameManager.drawHUD = True
+        self.gameManager.hud.bo5_visible = False
+        if self.gameManager.gameState.lastGame != None:
+            self.currentSelection = self.gameManager.gameState.lastGame
+            color = (0,0,255)
+            if self.gameManager.gameState.lastPlayerWon == 1:
+                color = (255,255,0)
+            self.categoryField[self.currentSelection[0]][self.currentSelection[1]] = self.get_Field_Surface(((self.currentSelection[1]+1)*100),color,(0,0,0))
+
+class SingleImageGameObject(GameObject):
+    
+    image = None
+    imageSf = None
+    score = 0
+
+    def __init__(self,image,score):
+        self.image = image
+        self.score = score
+        return super(SingleImageGameObject, self).__init__()
+
+    def update(self,time,events):
+        for event in events:
+            if event.type == KEYDOWN and event.key == K_1 and not self.objectLocked:
+                self.showP1Pressed = True
+            elif event.type == KEYDOWN and event.key == K_2 and not self.objectLocked:
+                self.showP2Pressed = True
+            elif event.type == KEYDOWN and event.key == K_3:
+                self.showP1Pressed = False
+                self.showP2Pressed = False
+            elif event.type == KEYDOWN and event.key == K_4:
+                self.objectLocked = True
+                if self.showP1Pressed:
+                    self.gameManager.hud.set_score(0,self.gameManager.hud.get_score(0)+self.score)
+                    self.gameManager.gameState.lastPlayerWon = 0
+                else:
+                    self.gameManager.hud.set_score(1,self.gameManager.hud.get_score(1)+self.score)
+                    self.gameManager.gameState.lastPlayerWon = 1
+                self.showP1Pressed = False
+                self.showP2Pressed = False
+                pygame.time.set_timer(USEREVENT+1,1500)
+            elif event.type == KEYDOWN and event.key == K_5:
+                self.objectLocked = True
+                if self.showP2Pressed:
+                    self.gameManager.hud.set_score(0,self.gameManager.hud.get_score(0)+self.score)
+                    self.gameManager.gameState.lastPlayerWon = 0
+                else:
+                    self.gameManager.hud.set_score(1,self.gameManager.hud.get_score(1)+self.score)
+                    self.gameManager.gameState.lastPlayerWon = 1
+                self.showP1Pressed = False
+                self.showP2Pressed = False
+                pygame.time.set_timer(USEREVENT+1,1500)
+            elif event.type == USEREVENT+1:
+                self.gameManager.setCurrentGameObject(self.gameManager.gameState.menu)
+        super(SingleImageGameObject, self).update(time,events)
+
+
+    def draw(self,screen):
+        screen.blit(self.background,(0,0))
+        screen.blit(self.imageSf,(87,65))
+        super(SingleImageGameObject, self).draw(screen)
+
+    def initialize(self):
+        self.background = pygame.surface.Surface((1024,768)).convert()
+        self.imageSf = pygame.image.load(os.path.join("data","test","image.png")).convert()
+        super(SingleImageGameObject,self).initialize()
+
+    def switchedTo(self):
+        self.gameManager.drawHUD = True
+        self.gameManager.hud.bo5_visible = False
+        super(SingleImageGameObject, self).switchedTo()
