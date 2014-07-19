@@ -27,8 +27,10 @@ class GameManager(object):
     def setCurrentGameObject(self,gameObject):
         if not gameObject.initialized:
             pygame.time.set_timer(USEREVENT+1,0)
+            pygame.time.set_timer(USEREVENT+2,0)
             gameObject.gameManager = self
             gameObject.initialize()
+            self.buttonHandler.unlock()
         self.gameObject = gameObject
         gameObject.switchedTo()
 

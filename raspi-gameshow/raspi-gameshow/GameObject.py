@@ -13,8 +13,14 @@ class GameObject(object):
     background = None
     P1PressedSf = None
     P2PressedSf = None
+    gameDrawSf = None
     showP1Pressed = False
     showP2Pressed = False
+    showRight = False
+    showWrong = False
+    rightSf = None
+    wrongSf = None
+    showGameDraw = False
     objectLocked = False
 
     def __init__(self):
@@ -26,8 +32,14 @@ class GameObject(object):
     def draw(self,screen):
         if self.showP1Pressed:
             screen.blit(self.P1PressedSf,(312,234))
-        if self.showP2Pressed:
+        elif self.showP2Pressed:
             screen.blit(self.P2PressedSf,(312,234))
+        elif self.showGameDraw:
+            screen.blit(self.gameDrawSf,(312,234))
+        elif self.showRight:
+            screen.blit(self.rightSf,(312,234))
+        elif self.showWrong:
+            screen.blit(self.wrongSf,(312,234))
     
     def initialize(self):
         font = pygame.font.Font(pygame.font.get_default_font(),45)
@@ -39,7 +51,22 @@ class GameObject(object):
         self.P2PressedSf.fill((255,255,0))
         size = font.size("Team Gelb")
         self.P2PressedSf.blit(font.render("Team Gelb",True,(0,0,0)),((400-size[0])/2,(300-size[1])/2))
+        self.gameDrawSf = pygame.surface.Surface((400,300)).convert()
+        self.gameDrawSf.fill((128,128,128))
+        size = font.size("Unentschieden!")
+        self.gameDrawSf.blit(font.render("Unentschieden!",True,(0,0,0)),((400-size[0])/2,(300-size[1])/2))
+        self.rightSf = pygame.surface.Surface((400,300)).convert()
+        self.rightSf.fill((0,255,0))
+        size = font.size("Richtig!")
+        self.rightSf.blit(font.render("Richtig!",True,(0,0,0)),((400-size[0])/2,(300-size[1])/2))
+        self.wrongSf = pygame.surface.Surface((400,300)).convert()
+        self.wrongSf.fill((255,0,0))
+        size = font.size("Falsch!")
+        self.wrongSf.blit(font.render("Falsch!",True,(0,0,0)),((400-size[0])/2,(300-size[1])/2))
+        
         self.initialized = True
+
+
 
     def switchedTo(self):
         pass
@@ -168,7 +195,6 @@ class MenuGameObject(GameObject):
             for row in range(100,600,100):
                 catFields.append(self.get_Field_Surface(row,(128,128,128),(0,0,0)))
                 catLock.append(False)
-                #catFields.append(field)
             self.categoryField.append(catFields)
             self.categoryLock.append(catLock)
 
@@ -201,7 +227,14 @@ class MenuGameObject(GameObject):
                     print "Starting",self.currentSelection
                     self.categoryLock[self.currentSelection[0]][self.currentSelection[1]] = True
                     self.gameManager.gameState.lastGame = self.currentSelection
-                    self.gameManager.setCurrentGameObject(SingleImageGameObject(None,(self.currentSelection[1]+1)*100))
+                    #self.gameManager.setCurrentGameObject(SingleImageGameObject(None,(self.currentSelection[1]+1)*100))
+                    self.gameManager.setCurrentGameObject(
+                        WhoIsLyingGameObject(
+                            "Ich bin ein Fussballer",
+                            ["Hansjoerg","Goetze","Neuer","Anna"],
+                            [True,False,False,True],
+                            (self.currentSelection[1]+1)*100)
+                                                          )
 
     def draw(self, screen):
         screen.blit(self.background,(0,0))
@@ -226,9 +259,13 @@ class MenuGameObject(GameObject):
         if self.gameManager.gameState.lastGame != None:
             self.currentSelection = self.gameManager.gameState.lastGame
             color = (0,0,255)
+            textcolor = (0,0,0)
             if self.gameManager.gameState.lastPlayerWon == 1:
                 color = (255,255,0)
-            self.categoryField[self.currentSelection[0]][self.currentSelection[1]] = self.get_Field_Surface(((self.currentSelection[1]+1)*100),color,(0,0,0))
+            elif self.gameManager.gameState.lastPlayerWon == "Draw":
+                color = (0,0,0)
+                textcolor = (255,255,255)
+            self.categoryField[self.currentSelection[0]][self.currentSelection[1]] = self.get_Field_Surface(((self.currentSelection[1]+1)*100),color,textcolor)
 
 class SingleImageGameObject(GameObject):
     
@@ -253,20 +290,32 @@ class SingleImageGameObject(GameObject):
             elif event.type == KEYDOWN and event.key == K_4:
                 self.objectLocked = True
                 if self.showP1Pressed:
+                    self.showP1Pressed = False
+                    self.showP2Pressed = False
                     self.gameManager.hud.set_score(0,self.gameManager.hud.get_score(0)+self.score)
                     self.gameManager.gameState.lastPlayerWon = 0
+                    self.showRight = True
                 else:
+                    self.showP1Pressed = False
+                    self.showP2Pressed = False
                     self.gameManager.hud.set_score(1,self.gameManager.hud.get_score(1)+self.score)
                     self.gameManager.gameState.lastPlayerWon = 1
+                    self.showRight = True
                 self.showP1Pressed = False
                 self.showP2Pressed = False
                 pygame.time.set_timer(USEREVENT+1,1500)
             elif event.type == KEYDOWN and event.key == K_5:
                 self.objectLocked = True
                 if self.showP2Pressed:
+                    self.showP1Pressed = False
+                    self.showP2Pressed = False
+                    self.showWrong = True
                     self.gameManager.hud.set_score(0,self.gameManager.hud.get_score(0)+self.score)
                     self.gameManager.gameState.lastPlayerWon = 0
                 else:
+                    self.showP1Pressed = False
+                    self.showP2Pressed = False
+                    self.showWrong = True
                     self.gameManager.hud.set_score(1,self.gameManager.hud.get_score(1)+self.score)
                     self.gameManager.gameState.lastPlayerWon = 1
                 self.showP1Pressed = False
@@ -284,6 +333,7 @@ class SingleImageGameObject(GameObject):
 
     def initialize(self):
         self.background = pygame.surface.Surface((1024,768)).convert()
+        self.background.fill((0,0,0))
         self.imageSf = pygame.image.load(os.path.join("data","test","image.png")).convert()
         super(SingleImageGameObject,self).initialize()
 
@@ -291,3 +341,100 @@ class SingleImageGameObject(GameObject):
         self.gameManager.drawHUD = True
         self.gameManager.hud.bo5_visible = False
         super(SingleImageGameObject, self).switchedTo()
+
+
+class WhoIsLyingGameObject(GameObject):
+    
+    quote = None
+    quoteSf = None
+    answerList = None
+    answerSf = None
+    answerKey = None
+    score = 0
+    elapsedMillis = 0
+    timerSf = None
+    font = None
+    answerNum = 0
+
+    def __init__(self,quote,answerList,answerKey,score):
+        self.quote = quote
+        self.answerList = answerList
+        self.answerKey = answerKey
+        self.score = score
+
+        return super(WhoIsLyingGameObject, self).__init__()
+
+    def update(self,time,events):
+
+        for event in events:
+            if event.type == KEYDOWN and event.key == K_1 and not self.objectLocked:
+                self.showP1Pressed = True
+                self.objectLocked = True
+                pygame.time.set_timer(USEREVENT+1,1000)
+            elif event.type == KEYDOWN and event.key == K_2 and not self.objectLocked:
+                self.showP2Pressed = True
+                self.objectLocked = True
+                pygame.time.set_timer(USEREVENT+1,1000)
+            elif event.type == USEREVENT+1:
+                if self.answerKey[self.answerNum]:
+                    self.showRight = True
+                    if self.showP1Pressed:
+                        self.gameManager.hud.set_score(0,self.score + self.gameManager.hud.get_score(0))
+                        self.gameManager.gameState.lastPlayerWon = 0
+                    elif self.showP2Pressed:
+                        self.gameManager.hud.set_score(1,self.score + self.gameManager.hud.get_score(1))
+                        self.gameManager.gameState.lastPlayerWon = 1
+                else:
+                    self.showWrong = True
+                    if self.showP1Pressed:
+                        self.gameManager.hud.set_score(1,self.score + self.gameManager.hud.get_score(1))
+                        self.gameManager.gameState.lastPlayerWon = 1
+                    if self.showP2Pressed:
+                        self.gameManager.hud.set_score(0,self.score + self.gameManager.hud.get_score(0))
+                        self.gameManager.gameState.lastPlayerWon = 0
+                self.showP1Pressed = False
+                self.showP2Pressed = False
+                pygame.time.set_timer(USEREVENT+1,0)
+                pygame.time.set_timer(USEREVENT+2,1500)
+            elif event.type == USEREVENT+2:
+                self.gameManager.setCurrentGameObject(self.gameManager.gameState.menu)
+
+        
+        if not self.objectLocked:
+            self.elapsedMillis += time
+            if self.elapsedMillis >= 5000:
+                self.answerNum += 1
+                if self.answerNum < len(self.answerList):
+                    self.elapsedMillis = 0
+                    self.answerSf = self.answerSf = self.font.render(self.answerList[self.answerNum],True,(255,255,255))
+                else:
+                    self.showGameDraw = True
+                    self.objectLocked = True
+                    self.gameManager.gameState.lastPlayerWon = "Draw"
+                    pygame.time.set_timer(USEREVENT+2,1500)
+        super(WhoIsLyingGameObject, self).update(time,events)
+
+
+    def draw(self,screen):
+        screen.blit(self.background,(0,0))
+        screen.blit(self.quoteSf,((1024-self.quoteSf.get_width())/2,150))
+        screen.blit(self.answerSf,((1024-self.answerSf.get_width())/2,350))
+        screen.blit(self.timerSf,(137,450),(0,0,750-(self.elapsedMillis/5000.*750.),50))
+        super(WhoIsLyingGameObject, self).draw(screen)
+
+    def initialize(self):
+        self.background = pygame.surface.Surface((1024,768)).convert()
+        self.background.fill((0,0,0))
+        self.font = pygame.font.Font(pygame.font.get_default_font(),45)
+        self.quoteSf = self.font.render(self.quote,True,(255,255,255))
+        self.timerSf = pygame.surface.Surface((750,50)).convert()
+        self.timerSf.fill((0,255,0))
+        self.answerSf = self.font.render(self.answerList[self.answerNum],True,(255,255,255))
+        super(WhoIsLyingGameObject,self).initialize()
+
+    def switchedTo(self):
+        self.elapsedMillis = 0
+        self.answerNum = 0
+        self.gameManager.drawHUD = True
+        self.gameManager.hud.bo5_visible = False
+        super(WhoIsLyingGameObject, self).switchedTo()
