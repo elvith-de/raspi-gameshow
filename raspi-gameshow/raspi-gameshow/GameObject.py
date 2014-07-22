@@ -2,7 +2,7 @@
 import pygame
 from pygame.locals import *
 import os
-
+import random
 
 
 
@@ -29,7 +29,10 @@ class GameObject(object):
     def update(self,time,events):
         pass
 
-    def draw(self,screen):
+    def draw(self,screen,callSuper=True):
+        self.drawButtonPressOverlay(screen)
+
+    def drawButtonPressOverlay(self,screen):
         if self.showP1Pressed:
             screen.blit(self.P1PressedSf,(312,234))
         elif self.showP2Pressed:
@@ -40,6 +43,9 @@ class GameObject(object):
             screen.blit(self.rightSf,(312,234))
         elif self.showWrong:
             screen.blit(self.wrongSf,(312,234))
+    
+    def switchedTo(self):
+        pass
     
     def initialize(self):
         font = pygame.font.Font(pygame.font.get_default_font(),45)
@@ -68,8 +74,7 @@ class GameObject(object):
 
 
 
-    def switchedTo(self):
-        pass
+
 
 
 class LoaderGameObject(GameObject):
@@ -99,7 +104,7 @@ class LoaderGameObject(GameObject):
                 self.gameManager.setCurrentGameObject(self.gameManager.gameState.menu)
 
         
-    def draw(self,screen):
+    def draw(self,screen,callSuper=True):
         screen.blit(self.background,(0,0))
 
     def switchedTo(self):
@@ -117,13 +122,14 @@ class ButtonCheckGameObject(GameObject):
     def __init__(self):
         return super(ButtonCheckGameObject, self).__init__()
 
-    def draw(self,screen):
+    def draw(self,screen,callSuper=True):
         size = self.font.size(self.text)
         textSf = self.font.render(self.text,True,self.textColor).convert_alpha()
         self.background.fill(self.color)
         self.background.blit(textSf,((1024-size[0])/2,(768-size[1])/2))
         screen.blit(self.background,(0,0))
-        super(ButtonCheckGameObject, self).draw(screen)
+        if callSuper:
+            super(ButtonCheckGameObject, self).draw(screen)
 
     def update(self, time,events):
         for event in events:
@@ -147,7 +153,8 @@ class ButtonCheckGameObject(GameObject):
                 self.color = (0,0,0)
                 self.textColor = (255,255,255)
                 self.gameManager.buttonHandler.unlock()
-        super(ButtonCheckGameObject, self).update(time,events)
+        if callSuper:
+            super(ButtonCheckGameObject, self).update(time,events)
         
     def initialize(self):
         self.gameManager.hud.reset_values(True,True)
@@ -228,15 +235,16 @@ class MenuGameObject(GameObject):
                     self.categoryLock[self.currentSelection[0]][self.currentSelection[1]] = True
                     self.gameManager.gameState.lastGame = self.currentSelection
                     #self.gameManager.setCurrentGameObject(SingleImageGameObject(None,(self.currentSelection[1]+1)*100))
-                    self.gameManager.setCurrentGameObject(
-                        WhoIsLyingGameObject(
-                            "Ich bin ein Fussballer",
-                            ["Hansjoerg","Goetze","Neuer","Anna"],
-                            [True,False,False,True],
-                            (self.currentSelection[1]+1)*100)
-                                                          )
+                    self.gameManager.setCurrentGameObject(ImageRevealGameObject(None,(self.currentSelection[1]+1)*100))
+                    #self.gameManager.setCurrentGameObject(
+                    #    WhoIsLyingGameObject(
+                    #        "Ich bin ein Fussballer",
+                    #        ["Hansjoerg","Goetze","Neuer","Anna"],
+                    #        [True,False,False,True],
+                    #        (self.currentSelection[1]+1)*100)
+                    #                                      )
 
-    def draw(self, screen):
+    def draw(self, screen, callSuper=True):
         screen.blit(self.background,(0,0))
         x = 29+self.currentSelection[0]*167+self.currentSelection[0]*33 - 10
         y = 173+self.currentSelection[1]*85+self.currentSelection[1]*15 -10
@@ -252,6 +260,7 @@ class MenuGameObject(GameObject):
             for row in range(5):    
                 y = 173+row*85+row*15
                 screen.blit(self.categoryField[col][row],(x,y))
+        super(MenuGameObject,self).draw(screen)
 
     def switchedTo(self):
         self.gameManager.drawHUD = True
@@ -326,10 +335,11 @@ class SingleImageGameObject(GameObject):
         super(SingleImageGameObject, self).update(time,events)
 
 
-    def draw(self,screen):
+    def draw(self,screen, callSuper=True):
         screen.blit(self.background,(0,0))
         screen.blit(self.imageSf,(87,65))
-        super(SingleImageGameObject, self).draw(screen)
+        if callSuper:
+            super(SingleImageGameObject, self).draw(screen)
 
     def initialize(self):
         self.background = pygame.surface.Surface((1024,768)).convert()
@@ -415,12 +425,13 @@ class WhoIsLyingGameObject(GameObject):
         super(WhoIsLyingGameObject, self).update(time,events)
 
 
-    def draw(self,screen):
+    def draw(self,screen, callSuper=True):
         screen.blit(self.background,(0,0))
         screen.blit(self.quoteSf,((1024-self.quoteSf.get_width())/2,150))
         screen.blit(self.answerSf,((1024-self.answerSf.get_width())/2,350))
         screen.blit(self.timerSf,(137,450),(0,0,750-(self.elapsedMillis/5000.*750.),50))
-        super(WhoIsLyingGameObject, self).draw(screen)
+        if callSuper:
+            super(WhoIsLyingGameObject, self).draw(screen)
 
     def initialize(self):
         self.background = pygame.surface.Surface((1024,768)).convert()
@@ -438,3 +449,42 @@ class WhoIsLyingGameObject(GameObject):
         self.gameManager.drawHUD = True
         self.gameManager.hud.bo5_visible = False
         super(WhoIsLyingGameObject, self).switchedTo()
+
+class ImageRevealGameObject(SingleImageGameObject):
+    
+    blackSF = None
+    renderSFList = []
+    
+    def __init__(self,image,score):
+        return super(ImageRevealGameObject, self).__init__(image,score)
+
+    def update(self,time,events):
+        for event in events:
+            if event.type == USEREVENT+2:
+                self.renderSFList.remove(self.renderSFList[0])
+            elif event.type == KEYDOWN and event.key == K_1 and not self.objectLocked:
+                pygame.time.set_timer(USEREVENT+2,0)
+            elif event.type == KEYDOWN and event.key == K_2 and not self.objectLocked:
+                pygame.time.set_timer(USEREVENT+2,0)
+            elif event.type == KEYDOWN and event.key == K_3:
+                pygame.time.set_timer(USEREVENT+2,1000)
+        super(ImageRevealGameObject, self).update(time,events)
+
+    def draw(self,screen,callSuper=True):
+        super(ImageRevealGameObject, self).draw(screen,False)
+        for sfID in self.renderSFList:
+            col = sfID % 12
+            row = (sfID -col)/12
+            screen.blit(self.blackSF,(86+(col*71),65+(row*71)))
+        self.drawButtonPressOverlay(screen)
+        
+    def switchedTo(self):
+        pygame.time.set_timer(USEREVENT+2,1000)
+        super(ImageRevealGameObject, self).switchedTo()
+    
+    def initialize(self):
+        self.blackSF = pygame.surface.Surface((71,71)).convert()
+        self.blackSF.fill((0,0,0))
+        self.renderSFList = range(108)
+        random.shuffle(self.renderSFList)
+        super(ImageRevealGameObject, self).initialize()
