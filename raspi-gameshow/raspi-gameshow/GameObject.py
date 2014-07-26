@@ -3,6 +3,7 @@ import pygame
 from pygame.locals import *
 import os
 import random
+import GameData
 
 
 
@@ -23,7 +24,7 @@ class GameObject(object):
     showGameDraw = False
     objectLocked = False
 
-    def __init__(self):
+    def __init__(self, gameData):
         return super(GameObject, self).__init__()
 
     def update(self,time,events):
@@ -79,8 +80,8 @@ class GameObject(object):
 
 class LoaderGameObject(GameObject):
     
-    def __init__(self):
-        return super(LoaderGameObject, self).__init__()
+    def __init__(self, gameData):
+        return super(LoaderGameObject, self).__init__(gameData)
 
     def initialize(self):
         logo = pygame.image.load(os.path.join("data","res","logo.png")).convert()
@@ -100,7 +101,9 @@ class LoaderGameObject(GameObject):
         for event in events:
             if event.type == USEREVENT+1:
                 #self.gameManager.setCurrentGameObject(ButtonCheckGameObject())
-                self.gameManager.gameState.menu = MenuGameObject(["intakt","Action","Bilder","Wer lügt?","Blatest"])
+                self.gameManager.gameState.fillDummyGameData()
+                self.gameManager.gameState.menuGameData = GameData.MenuGameData(["intakt","Action","Bilder","Wer lügt?","Blatest"],None,None)
+                self.gameManager.gameState.menu = MenuGameObject(self.gameManager.gameState.menuGameData)
                 self.gameManager.setCurrentGameObject(self.gameManager.gameState.menu)
 
         
@@ -119,8 +122,8 @@ class ButtonCheckGameObject(GameObject):
     color = (0,0,0)
     textColor = (255,255,255)
 
-    def __init__(self):
-        return super(ButtonCheckGameObject, self).__init__()
+    def __init__(self,gameData):
+        return super(ButtonCheckGameObject, self).__init__(gameData)
 
     def draw(self,screen,callSuper=True):
         size = self.font.size(self.text)
@@ -179,9 +182,9 @@ class MenuGameObject(GameObject):
     test = (255,255,0)
     font = None
 
-    def __init__(self, categories):
-        self.categoryText = categories
-        return super(MenuGameObject, self).__init__()
+    def __init__(self, gameData):
+        self.categoryText = gameData.categories
+        return super(MenuGameObject, self).__init__(gameData)
 
     def get_Field_Surface(self, value, colBg, colTx):
         field = pygame.surface.Surface((167,85)).convert()
@@ -234,8 +237,9 @@ class MenuGameObject(GameObject):
                     print "Starting",self.currentSelection
                     self.categoryLock[self.currentSelection[0]][self.currentSelection[1]] = True
                     self.gameManager.gameState.lastGame = self.currentSelection
-                    #self.gameManager.setCurrentGameObject(SingleImageGameObject(None,(self.currentSelection[1]+1)*100))
-                    self.gameManager.setCurrentGameObject(ImageRevealGameObject(None,(self.currentSelection[1]+1)*100))
+                    self.startGame()
+                    #self.gameManager.setCurrentGameObject(SingleImageGameObject(os.path.join("data","test","image.png"),(self.currentSelection[1]+1)*100))
+                    #self.gameManager.setCurrentGameObject(ImageRevealGameObject(os.path.join("data","test","image.png"),(self.currentSelection[1]+1)*100))
                     #self.gameManager.setCurrentGameObject(
                     #    WhoIsLyingGameObject(
                     #        "Ich bin ein Fussballer",
@@ -276,16 +280,29 @@ class MenuGameObject(GameObject):
                 textcolor = (255,255,255)
             self.categoryField[self.currentSelection[0]][self.currentSelection[1]] = self.get_Field_Surface(((self.currentSelection[1]+1)*100),color,textcolor)
 
+    def startGame(self):
+        gameData = self.gameManager.gameState.gameData[self.currentSelection[0]][self.currentSelection[1]]
+        gameObject = None
+        if gameData.type == "SingleImageGameData":
+            gameObject = SingleImageGameObject(gameData)
+        elif gameData.type == "WhoIsLyingGameData":
+            gameObject = WhoIsLyingGameObject(gameData)
+        elif gameData.type == "ImageRevealGameData":
+            gameObject = ImageRevealGameObject(gameData)
+        else:
+            print "error, type is",gameData.type
+        self.gameManager.setCurrentGameObject(gameObject)
+
 class SingleImageGameObject(GameObject):
     
     image = None
     imageSf = None
     score = 0
 
-    def __init__(self,image,score):
-        self.image = image
-        self.score = score
-        return super(SingleImageGameObject, self).__init__()
+    def __init__(self,gameData):
+        self.image = gameData.image
+        self.score = gameData.score
+        return super(SingleImageGameObject, self).__init__(gameData)
 
     def update(self,time,events):
         for event in events:
@@ -344,7 +361,7 @@ class SingleImageGameObject(GameObject):
     def initialize(self):
         self.background = pygame.surface.Surface((1024,768)).convert()
         self.background.fill((0,0,0))
-        self.imageSf = pygame.image.load(os.path.join("data","test","image.png")).convert()
+        self.imageSf = pygame.image.load(self.image).convert()
         super(SingleImageGameObject,self).initialize()
 
     def switchedTo(self):
@@ -366,13 +383,13 @@ class WhoIsLyingGameObject(GameObject):
     font = None
     answerNum = 0
 
-    def __init__(self,quote,answerList,answerKey,score):
-        self.quote = quote
-        self.answerList = answerList
-        self.answerKey = answerKey
-        self.score = score
+    def __init__(self,gameData):
+        self.quote = gameData.quote
+        self.answerList = gameData.answerList
+        self.answerKey = gameData.answerKey
+        self.score = gameData.score
 
-        return super(WhoIsLyingGameObject, self).__init__()
+        return super(WhoIsLyingGameObject, self).__init__(gameData)
 
     def update(self,time,events):
 
@@ -455,8 +472,8 @@ class ImageRevealGameObject(SingleImageGameObject):
     blackSF = None
     renderSFList = []
     
-    def __init__(self,image,score):
-        return super(ImageRevealGameObject, self).__init__(image,score)
+    def __init__(self,gameData):
+        return super(ImageRevealGameObject, self).__init__(gameData)
 
     def update(self,time,events):
         for event in events:

@@ -94,8 +94,8 @@ def testColor():
 def main():    
     handler = ButtonHandler.ButtonHandler()
     piFaceManager = PiFaceManager.PiFaceManager(handler)
-    gameManager = GameManager.GameManager(GameObject.GameObject(),30,handler,piFaceManager)
-    gameObject = GameObject.LoaderGameObject()
+    gameManager = GameManager.GameManager(GameObject.GameObject(None),30,handler,piFaceManager)
+    gameObject = GameObject.LoaderGameObject(None)
     gameManager.setCurrentGameObject(gameObject)
     gameManager.gameState = GameStateSaver.GameStateSaver()
     gameManager.run()
