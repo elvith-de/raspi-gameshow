@@ -25,6 +25,7 @@
   <ItemGroup>
     <Compile Include="ButtonHandler.py" />
     <Compile Include="GameData.py" />
+    <Compile Include="GameFileLoader.py" />
     <Compile Include="GameObject.py" />
     <Compile Include="GameManager.py" />
     <Compile Include="GameStateSaver.py" />

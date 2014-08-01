@@ -4,7 +4,7 @@ from pygame.locals import *
 import os
 import random
 import GameData
-
+import GameFileLoader
 
 
 class GameObject(object):
@@ -80,26 +80,41 @@ class GameObject(object):
 
 class LoaderGameObject(GameObject):
     
+    loader = None
+    font = None
+    text = "Loading..."
+    textDirty = True
+    logo=None
+    textSf = None
+    textSfsize = None
+
+    def setText(self,text):
+        self.textDirty = True
+        self.text = text
+
     def __init__(self, gameData):
+        self.loader = GameFileLoader.GameFileLoader("Test.xml",self)
         return super(LoaderGameObject, self).__init__(gameData)
 
+    def createTextSf(self):
+        self.textSf = self.font.render(self.text,True,(255,255,255)).convert_alpha()
+        self.textSfsize = self.font.size(self.text)
+        self.textDirty = False
+
     def initialize(self):
-        logo = pygame.image.load(os.path.join("data","res","logo.png")).convert()
+        self.logo = pygame.image.load(os.path.join("data","res","logo.png")).convert()
         self.background = pygame.surface.Surface((1024,768)).convert()
-        self.background.fill((0,0,0))
-        self.background.blit(logo,(300,151))
-        font = pygame.font.Font(pygame.font.get_default_font(),45)
-        text = font.render("raspi-gameshow",True,(0,0,0)).convert_alpha()
-        self.background.blit(text,(332,490))
-        text = font.render("Loading...",True,(255,255,255)).convert_alpha()
-        size = font.size("Loading...")
-        self.background.blit(text,(((1024-size[0])/2,(768-size[1]-10))))
-        pygame.time.set_timer(USEREVENT+1,2000)
+        self.font = pygame.font.Font(pygame.font.get_default_font(),45)
+        #pygame.time.set_timer(USEREVENT+1,2000)
+        self.loader.start()
         super(LoaderGameObject,self).initialize()
 
     def update(self,time,events):
-        for event in events:
-            if event.type == USEREVENT+1:
+        if self.textDirty:
+            self.createTextSf()
+        if not self.loader.isAlive():
+        #for event in events:
+        #    if event.type == USEREVENT+1:
                 #self.gameManager.setCurrentGameObject(ButtonCheckGameObject())
                 self.gameManager.gameState.fillDummyGameData()
                 self.gameManager.gameState.menuGameData = GameData.MenuGameData(["intakt","Action","Bilder","Wer lügt?","Blatest"],None,None)
@@ -108,6 +123,11 @@ class LoaderGameObject(GameObject):
 
         
     def draw(self,screen,callSuper=True):
+        self.background.fill((0,0,0))
+        self.background.blit(self.logo,(300,151))
+        text = self.font.render("raspi-gameshow",True,(0,0,0)).convert_alpha()
+        self.background.blit(text,(332,490))        
+        self.background.blit(self.textSf,(((1024-self.textSfsize[0])/2,(768-self.textSfsize[1]-10))))
         screen.blit(self.background,(0,0))
 
     def switchedTo(self):
