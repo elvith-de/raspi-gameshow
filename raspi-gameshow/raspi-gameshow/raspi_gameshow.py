@@ -28,6 +28,8 @@ import GameManager
 import GameObject
 import time
 import GameStateSaver
+import os
+import sys
 
 def testInput():
     handler = ButtonHandler.ButtonHandler()
@@ -90,6 +92,10 @@ def testColor():
 
     print "cleaning up and ending program..."
     piFaceManager.deactivate()
+
+
+
+
 
 def main():    
     handler = ButtonHandler.ButtonHandler()

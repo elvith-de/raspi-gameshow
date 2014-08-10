@@ -1,4 +1,6 @@
 import GameData
+import sys
+import os
 
 class GameStateSaver(object):
     menu = None
@@ -6,6 +8,40 @@ class GameStateSaver(object):
     lastGame = None
     menuGameData = None
     gameData = []
+
+    restore_from_savefile = False
+    savefile = None
+    appdir = None
+    gameFile = None
+    gameFilePath = None
+
+    def __init__(self):
+        for e in sys.argv:
+            print e
+            if e == "raspi_gameshow.py":
+                continue
+            if e == "--restore":
+                self.restore_from_savefile = True
+            else:
+                self.gameFile = os.path.abspath(e)
+        appdir = __file__
+        if not appdir:
+            raise ValueError
+        self.appdir = os.path.abspath(os.path.dirname(__file__))
+        gameFilePath = self.gameFile
+        if not gameFilePath:
+            raise ValueError
+        self.gameFilePath = os.path.abspath(os.path.dirname(self.gameFile))
+        self.savefile = os.path.abspath(os.path.join(gameFilePath,"game.save"))
+
+        
+        print "Config:"
+        print "appdir:",self.appdir
+        print "gameFile",self.gameFile
+        print "gameFilePath",self.gameFilePath
+        print "restore",self.restore_from_savefile
+        print "savegame",self.savefile
+
 
     def fillDummyGameData(self):
         import os
