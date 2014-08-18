@@ -16,23 +16,29 @@ class GameStateSaver(object):
     gameFilePath = None
 
     def __init__(self):
-        for e in sys.argv:
-            print e
-            if e == "raspi_gameshow.py":
-                continue
-            if e == "--restore":
+        for i in range(1,len(sys.argv)):
+            if sys.argv[i] == "--restore":
                 self.restore_from_savefile = True
             else:
-                self.gameFile = os.path.abspath(e)
+                self.gameFile = os.path.abspath(sys.argv[i])
         appdir = __file__
         if not appdir:
             raise ValueError
         self.appdir = os.path.abspath(os.path.dirname(__file__))
         gameFilePath = self.gameFile
-        if not gameFilePath:
-            raise ValueError
+        if not self.gameFile or not gameFilePath:
+            print "Error: unparseable arguments given!"
+            print "Sytax is"
+            print "python raspi_gameshow.py <file to load game from> [--restore]"
+            raise ValueError("unparseable arguments given")
+
         self.gameFilePath = os.path.abspath(os.path.dirname(self.gameFile))
         self.savefile = os.path.abspath(os.path.join(gameFilePath,"game.save"))
+        if not self.gameFilePath or not self.savefile:
+            print "Error: Cannot determine path to game file or save file! Wrong arguments?"
+            print "Sytax is"
+            print "python raspi_gameshow.py <file to load game from> [--restore]"
+            raise ValueError("unparseable arguments given")
 
         
         print "Config:"

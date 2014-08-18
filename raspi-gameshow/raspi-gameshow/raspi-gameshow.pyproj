@@ -14,7 +14,7 @@
     <RootNamespace>raspi-gameshow</RootNamespace>
     <IsWindowsApplication>False</IsWindowsApplication>
     <LaunchProvider>Standard Python launcher</LaunchProvider>
-    <CommandLineArguments>\temp\intakt.xml --restore</CommandLineArguments>
+    <CommandLineArguments>--restore D:\Temp\intakt.xml</CommandLineArguments>
     <InterpreterPath />
     <InterpreterArguments />
     <EnableNativeCodeDebugging>False</EnableNativeCodeDebugging>
