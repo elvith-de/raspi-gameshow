@@ -66,21 +66,25 @@ class GameManager(object):
         self.hud.initialize()
 
     def run(self):
-        while 1:
-            currentMillis = self.clock.tick(self.targetFPS)
-            events = pygame.event.get()
-            self.update(currentMillis,events)
-            self.draw()
-            pygame.display.flip()
+        try:
+            while 1:
+                currentMillis = self.clock.tick(self.targetFPS)
+                events = pygame.event.get()
+                self.update(currentMillis,events)
+                self.draw()
+                pygame.display.flip()
 
         #Handle Input Events - FOR TESTING ONLY - Events have to be checked by the GameObjects...
-            for event in events:
-                if event.type == QUIT:
+                for event in events:
+                    if event.type == QUIT:
+                        pygame.display.quit()
+                        return
+                    elif event.type == KEYDOWN and event.key == K_ESCAPE:
+                        pygame.display.quit()
+                        return
+                if self.needQuit:
                     pygame.display.quit()
                     return
-                elif event.type == KEYDOWN and event.key == K_ESCAPE:
-                    pygame.display.quit()
-                    return
-            if self.needQuit:
-                pygame.display.quit()
-                return
+        except:
+            pygame.display.quit()
+            return

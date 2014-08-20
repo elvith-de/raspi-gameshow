@@ -55,28 +55,31 @@ class GameFileLoader(threading.Thread):
             return GameData.WhoIsLyingGameData(quote,answerList,answerKey,None,score)
 
     def run(self):
-        self.gameState = self.loader.gameManager.gameState
-        self.datafile = self.gameState.gameFile
-        self.dataPath = self.gameState.gameFilePath
-        self.restore = self.gameState.restore_from_savefile
-        self.saveFile = self.gameState.savefile
+        try:
+            self.gameState = self.loader.gameManager.gameState
+            self.datafile = self.gameState.gameFile
+            self.dataPath = self.gameState.gameFilePath
+            self.restore = self.gameState.restore_from_savefile
+            self.saveFile = self.gameState.savefile
         
-        self.loader.setText("Parse Datei")
-        tree = ET.parse(self.datafile)
-        root = tree.getroot()
-        self.checkVersion(root.attrib["file-format-version"])
+            self.loader.setText("Parse Datei")
+            tree = ET.parse(self.datafile)
+            root = tree.getroot()
+            self.checkVersion(root.attrib["file-format-version"])
 
-        categoryNames = []
-        gameData = []
-        for categoryRoot in root:
-            gameDataInCategory = []
-            catName = categoryRoot.attrib["name"]
-            self.loader.setText("Erzeuge Kategorie "+catName)
-            categoryNames.append(catName)
-            for i in range(5):
-                game = categoryRoot[i]
-                gameDataInCategory.append(self.parse(game))
-            gameData.append(gameDataInCategory)
+            categoryNames = []
+            gameData = []
+            for categoryRoot in root:
+                gameDataInCategory = []
+                catName = categoryRoot.attrib["name"]
+                self.loader.setText("Erzeuge Kategorie "+catName)
+                categoryNames.append(catName)
+                for i in range(5):
+                    game = categoryRoot[i]
+                    gameDataInCategory.append(self.parse(game))
+                gameData.append(gameDataInCategory)
 
-        self.gameState.menuGameData = GameData.MenuGameData(categoryNames,None,None)
-        self.gameState.gameData = gameData
+            self.gameState.menuGameData = GameData.MenuGameData(categoryNames,None,None)
+            self.gameState.gameData = gameData
+        except:
+            self.loader.gameManager.needQuit = True
