@@ -4,8 +4,8 @@ import os
 
 class GameStateSaver(object):
     menu = None
-    lastPlayerWon = None
-    lastGame = None
+    lastPlayerWon = None #[0,1,Draw]
+    lastGame = None #[x,y]
     menuGameData = None
     gameData = []
 
@@ -41,7 +41,8 @@ class GameStateSaver(object):
             raise ValueError("unparseable arguments given")
 
         
-        print "Config:"
+        print "Config"
+        print "======"
         print "appdir:",self.appdir
         print "gameFile",self.gameFile
         print "gameFilePath",self.gameFilePath

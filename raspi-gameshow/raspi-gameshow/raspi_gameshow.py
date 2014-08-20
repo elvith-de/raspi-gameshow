@@ -101,9 +101,9 @@ def main():
     handler = ButtonHandler.ButtonHandler()
     piFaceManager = PiFaceManager.PiFaceManager(handler)
     gameManager = GameManager.GameManager(GameObject.GameObject(None),30,handler,piFaceManager)
+    gameManager.gameState = GameStateSaver.GameStateSaver()
     gameObject = GameObject.LoaderGameObject(None)
     gameManager.setCurrentGameObject(gameObject)
-    gameManager.gameState = GameStateSaver.GameStateSaver()
     gameManager.run()
     piFaceManager.deactivate()
 

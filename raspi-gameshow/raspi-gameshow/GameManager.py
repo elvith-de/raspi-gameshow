@@ -15,6 +15,7 @@ class GameManager(object):
     drawHUD = True
     piFaceManager = None
     gameState = None
+    needQuit = False
 
     def __init__(self,initialGameObject,targetFPS,buttonHandler,piFaceManager):
         self.gameObject = initialGameObject
@@ -80,3 +81,6 @@ class GameManager(object):
                 elif event.type == KEYDOWN and event.key == K_ESCAPE:
                     pygame.display.quit()
                     return
+            if self.needQuit:
+                pygame.display.quit()
+                return

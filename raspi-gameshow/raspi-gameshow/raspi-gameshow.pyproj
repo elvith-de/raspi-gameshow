@@ -14,7 +14,7 @@
     <RootNamespace>raspi-gameshow</RootNamespace>
     <IsWindowsApplication>False</IsWindowsApplication>
     <LaunchProvider>Standard Python launcher</LaunchProvider>
-    <CommandLineArguments>--restore D:\Temp\intakt.xml</CommandLineArguments>
+    <CommandLineArguments>--restore data\intakt\intakt-VV.xml</CommandLineArguments>
     <InterpreterPath />
     <InterpreterArguments />
     <EnableNativeCodeDebugging>False</EnableNativeCodeDebugging>
@@ -38,6 +38,24 @@
     <Compile Include="PiFaceManager.py" />
     <Compile Include="raspi_gameshow.py" />
     <Compile Include="__init__.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="data\" />
+    <Folder Include="data\intakt\" />
+    <Folder Include="data\intakt\img\" />
+    <Folder Include="data\res\" />
+    <Folder Include="data\test\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="data\intakt\intakt-VV.xml" />
+    <Content Include="data\res\bo5-board_blue.png" />
+    <Content Include="data\res\bo5-board_yellow.png" />
+    <Content Include="data\res\bo5-dot_blue.png" />
+    <Content Include="data\res\bo5-dot_yellow.png" />
+    <Content Include="data\res\logo.png" />
+    <Content Include="data\res\score_blue.png" />
+    <Content Include="data\res\score_yellow.png" />
+    <Content Include="data\test\image.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />
 </Project>

@@ -93,7 +93,7 @@ class LoaderGameObject(GameObject):
         self.text = text
 
     def __init__(self, gameData):
-        self.loader = GameFileLoader.GameFileLoader("Test.xml",self)
+        self.loader = GameFileLoader.GameFileLoader(self)
         return super(LoaderGameObject, self).__init__(gameData)
 
     def createTextSf(self):
@@ -116,8 +116,8 @@ class LoaderGameObject(GameObject):
         #for event in events:
         #    if event.type == USEREVENT+1:
                 #self.gameManager.setCurrentGameObject(ButtonCheckGameObject())
-                self.gameManager.gameState.fillDummyGameData()
-                self.gameManager.gameState.menuGameData = GameData.MenuGameData(["intakt","Action","Bilder","Wer lügt?","Blatest"],None,None)
+                #self.gameManager.gameState.fillDummyGameData()
+                #self.gameManager.gameState.menuGameData = GameData.MenuGameData(["intakt","Action","Bilder","Wer lügt?","Blatest"],None,None)
                 self.gameManager.gameState.menu = MenuGameObject(self.gameManager.gameState.menuGameData)
                 self.gameManager.setCurrentGameObject(self.gameManager.gameState.menu)
 
