@@ -27,7 +27,6 @@ import ButtonHandler
 import GameManager
 import GameObject
 import time
-import GameStateSaver
 import os
 import sys
 import pygame
@@ -103,12 +102,12 @@ def main():
         handler = ButtonHandler.ButtonHandler()
         piFaceManager = PiFaceManager.PiFaceManager(handler)
         gameManager = GameManager.GameManager(GameObject.GameObject(None),30,handler,piFaceManager)
-        gameManager.gameState = GameStateSaver.GameStateSaver()
         gameObject = GameObject.LoaderGameObject(None)
         gameManager.setCurrentGameObject(gameObject)
         gameManager.run()
         piFaceManager.deactivate()
-    except:
+    except Exception as e:
+        print e
         pygame.display.quit()
         piFaceManager.deactivate()
 

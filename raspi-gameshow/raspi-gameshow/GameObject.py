@@ -194,19 +194,23 @@ class MenuGameObject(GameObject):
 
     
     categoryField = []
-    categoryLock = []
+    
     categoryText = None
     categoryTextSf = []
     selectionMarker = None
     currentSelection = [0,0]
     test = (255,255,0)
     font = None
+    colorField = {'Player-1':[[128,128,128],[0,0,0]],'Player0':[[0,0,255],[0,0,0]], 'Player1':[[255,255,0],[0,0,0]],'PlayerDraw':[[0,0,0],[255,255,255]]}
 
     def __init__(self, gameData):
         self.categoryText = gameData.categories
         return super(MenuGameObject, self).__init__(gameData)
 
-    def get_Field_Surface(self, value, colBg, colTx):
+    def get_Field_Surface(self, value, playerNum):
+        key = "Player"+str(playerNum)
+        colBg = self.colorField[key][0]
+        colTx = self.colorField[key][1]
         field = pygame.surface.Surface((167,85)).convert()
         field.fill(colBg)
         size = self.font.size(str(value))
@@ -221,12 +225,10 @@ class MenuGameObject(GameObject):
 
         for cat in range(5):
             catFields = []
-            catLock = []
-            for row in range(100,600,100):
-                catFields.append(self.get_Field_Surface(row,(128,128,128),(0,0,0)))
-                catLock.append(False)
+            for row in range(5):
+                points = (row+1)*100
+                catFields.append(self.get_Field_Surface(points,self.gameManager.gameState.lockByPlayer[cat][row]))
             self.categoryField.append(catFields)
-            self.categoryLock.append(catLock)
 
         font2 = pygame.font.Font(pygame.font.get_default_font(),25)
         for cat in self.categoryText:
@@ -252,21 +254,13 @@ class MenuGameObject(GameObject):
                 if self.currentSelection[1] < 4:
                     self.currentSelection[1] += 1
             elif event.type == KEYDOWN and event.key == K_RETURN:
-                if not self.categoryLock[self.currentSelection[0]][self.currentSelection[1]]:
+                if not self.gameManager.gameState.categoryLock[self.currentSelection[0]][self.currentSelection[1]]:
                     #start according gameObject
                     print "Starting",self.currentSelection
-                    self.categoryLock[self.currentSelection[0]][self.currentSelection[1]] = True
+                    self.gameManager.gameState.categoryLock[self.currentSelection[0]][self.currentSelection[1]] = True
                     self.gameManager.gameState.lastGame = self.currentSelection
                     self.startGame()
-                    #self.gameManager.setCurrentGameObject(SingleImageGameObject(os.path.join("data","test","image.png"),(self.currentSelection[1]+1)*100))
-                    #self.gameManager.setCurrentGameObject(ImageRevealGameObject(os.path.join("data","test","image.png"),(self.currentSelection[1]+1)*100))
-                    #self.gameManager.setCurrentGameObject(
-                    #    WhoIsLyingGameObject(
-                    #        "Ich bin ein Fussballer",
-                    #        ["Hansjoerg","Goetze","Neuer","Anna"],
-                    #        [True,False,False,True],
-                    #        (self.currentSelection[1]+1)*100)
-                    #                                      )
+
 
     def draw(self, screen, callSuper=True):
         screen.blit(self.background,(0,0))
@@ -291,14 +285,8 @@ class MenuGameObject(GameObject):
         self.gameManager.hud.bo5_visible = False
         if self.gameManager.gameState.lastGame != None:
             self.currentSelection = self.gameManager.gameState.lastGame
-            color = (0,0,255)
-            textcolor = (0,0,0)
-            if self.gameManager.gameState.lastPlayerWon == 1:
-                color = (255,255,0)
-            elif self.gameManager.gameState.lastPlayerWon == "Draw":
-                color = (0,0,0)
-                textcolor = (255,255,255)
-            self.categoryField[self.currentSelection[0]][self.currentSelection[1]] = self.get_Field_Surface(((self.currentSelection[1]+1)*100),color,textcolor)
+            self.categoryField[self.currentSelection[0]][self.currentSelection[1]] = self.get_Field_Surface(((self.currentSelection[1]+1)*100),self.gameManager.gameState.lastPlayerWon)
+            self.gameManager.gameState.lockByPlayer[self.currentSelection[0]][self.currentSelection[1]] = self.gameManager.gameState.lastPlayerWon
 
     def startGame(self):
         gameData = self.gameManager.gameState.gameData[self.currentSelection[0]][self.currentSelection[1]]

@@ -2,6 +2,7 @@ import pygame
 from pygame.locals import *
 import time
 import HUD
+import GameStateSaver
 
 
 class GameManager(object):
@@ -14,11 +15,12 @@ class GameManager(object):
     hud = HUD.HUD()
     drawHUD = True
     piFaceManager = None
-    gameState = None
+    gameState = GameStateSaver.GameStateSaver()
     needQuit = False
 
     def __init__(self,initialGameObject,targetFPS,buttonHandler,piFaceManager):
         self.gameObject = initialGameObject
+        self.hud.gameState = self.gameState
         self.targetFPS = targetFPS
         self.buttonHandler = buttonHandler
         self.piFaceManager = piFaceManager
@@ -34,6 +36,7 @@ class GameManager(object):
             self.buttonHandler.unlock()
         self.gameObject = gameObject
         gameObject.switchedTo()
+        self.gameState.save()
 
     def update(self,time,events):
         self.gameObject.update(time,events)
@@ -85,6 +88,7 @@ class GameManager(object):
                 if self.needQuit:
                     pygame.display.quit()
                     return
-        except:
+        except Exception as e:
+            print e
             pygame.display.quit()
             return

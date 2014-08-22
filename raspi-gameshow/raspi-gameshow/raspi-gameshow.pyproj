@@ -14,7 +14,7 @@
     <RootNamespace>raspi-gameshow</RootNamespace>
     <IsWindowsApplication>False</IsWindowsApplication>
     <LaunchProvider>Standard Python launcher</LaunchProvider>
-    <CommandLineArguments>--restore data\intakt\intakt-VV.xml</CommandLineArguments>
+    <CommandLineArguments>data\intakt\intakt-VV.xml --new-game</CommandLineArguments>
     <InterpreterPath />
     <InterpreterArguments />
     <EnableNativeCodeDebugging>False</EnableNativeCodeDebugging>
@@ -47,6 +47,7 @@
     <Folder Include="data\test\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="data\intakt\intakt-VV.save.xml" />
     <Content Include="data\intakt\intakt-VV.xml" />
     <Content Include="data\res\bo5-board_blue.png" />
     <Content Include="data\res\bo5-board_yellow.png" />

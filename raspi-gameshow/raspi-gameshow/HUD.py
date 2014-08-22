@@ -4,11 +4,11 @@ import os
 class HUD(object):
     """description of class"""
 
-    score_blue = 0
+    
     score_blue_dirty = True
     score_blue_img = None
     score_blue_draw = None
-    score_yellow = 0
+    
     score_yellow_dirty = True
     score_yellow_img = None
     score_yellow_draw = None
@@ -20,6 +20,7 @@ class HUD(object):
     bo5_yellow_img = None
     bo5_yellow_dot = None
     font = None
+    gameState = None
 
     def __init__(self, *args, **kwargs):
         return super(HUD, self).__init__(*args, **kwargs)
@@ -61,17 +62,17 @@ class HUD(object):
     
     def set_score(self,player,score):
         if player == 0:
-            self.score_blue = score
+            self.gameState.score_blue = score
             self.score_blue_dirty = True
         else:
-            self.score_yellow = score
+            self.gameState.score_yellow = score
             self.score_yellow_dirty = True
 
     def get_score(self, player):
         if player == 0:
-            return self.score_blue
+            return self.gameState.score_blue
         else:
-            return self.score_yellow
+            return self.gameState.score_yellow
 
     def initialize(self):
         self.reset_values(True)
@@ -89,14 +90,14 @@ class HUD(object):
     def update_score_surface(self):
         if self.score_blue_dirty:
             self.score_blue_draw.blit(self.score_blue_img,(0,0))
-            size = self.font.size(str(self.score_blue))
-            text = self.font.render(str(self.score_blue),True,(0,0,0))
+            size = self.font.size(str(self.gameState.score_blue))
+            text = self.font.render(str(self.gameState.score_blue),True,(0,0,0))
             self.score_blue_draw.blit(text,(226-size[0],0))
             self.score_blue_dirty = False
         if self.score_yellow_dirty:
             self.score_yellow_draw.blit(self.score_yellow_img,(0,0))
-            size = self.font.size(str(self.score_yellow))
-            text = self.font.render(str(self.score_yellow),True,(0,0,0))
+            size = self.font.size(str(self.gameState.score_yellow))
+            text = self.font.render(str(self.gameState.score_yellow),True,(0,0,0))
             self.score_yellow_draw.blit(text,(226-size[0],0))
             self.score_yellow_dirty = False
 
