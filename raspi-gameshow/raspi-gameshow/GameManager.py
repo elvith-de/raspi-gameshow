@@ -3,6 +3,8 @@ from pygame.locals import *
 import time
 import HUD
 import GameStateSaver
+import SoundObject
+
 
 
 class GameManager(object):
@@ -17,6 +19,7 @@ class GameManager(object):
     piFaceManager = None
     gameState = GameStateSaver.GameStateSaver()
     needQuit = False
+    sound = None
 
     def __init__(self,initialGameObject,targetFPS,buttonHandler,piFaceManager):
         self.gameObject = initialGameObject
@@ -35,6 +38,7 @@ class GameManager(object):
             gameObject.initialize()
             self.buttonHandler.unlock()
         self.gameObject = gameObject
+        self.gameObject.sound = self.sound
         gameObject.switchedTo()
         self.gameState.save()
 
@@ -67,6 +71,8 @@ class GameManager(object):
         print pygame.display.Info()
         self.clock = pygame.time.Clock()
         self.hud.initialize()
+        self.sound = SoundObject.SoundObject(self.gameState.appdir)
+        self.gameObject.sound = self.sound
 
     def run(self):
         try:

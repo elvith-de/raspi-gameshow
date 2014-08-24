@@ -37,6 +37,7 @@
     <Compile Include="HUD.py" />
     <Compile Include="PiFaceManager.py" />
     <Compile Include="raspi_gameshow.py" />
+    <Compile Include="SoundObject.py" />
     <Compile Include="__init__.py" />
   </ItemGroup>
   <ItemGroup>
@@ -49,6 +50,9 @@
   <ItemGroup>
     <Content Include="data\intakt\intakt-VV.save.xml" />
     <Content Include="data\intakt\intakt-VV.xml" />
+    <Content Include="data\res\171670__fins__success-2.wav" />
+    <Content Include="data\res\186896__mrmacross__negativebuzz.mp3" />
+    <Content Include="data\res\244932__kwahmah-02__short-buzzer.wav" />
     <Content Include="data\res\bo5-board_blue.png" />
     <Content Include="data\res\bo5-board_yellow.png" />
     <Content Include="data\res\bo5-dot_blue.png" />

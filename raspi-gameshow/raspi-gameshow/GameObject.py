@@ -23,6 +23,7 @@ class GameObject(object):
     wrongSf = None
     showGameDraw = False
     objectLocked = False
+    sound = None
 
     def __init__(self, gameData):
         return super(GameObject, self).__init__()
@@ -315,20 +316,25 @@ class SingleImageGameObject(GameObject):
     def update(self,time,events):
         for event in events:
             if event.type == KEYDOWN and event.key == K_1 and not self.objectLocked:
+                self.sound.playBuzzer()
                 self.showP1Pressed = True
+                self.objectLocked = True
             elif event.type == KEYDOWN and event.key == K_2 and not self.objectLocked:
+                self.sound.playBuzzer()
                 self.showP2Pressed = True
+                self.objectLocked = True
             elif event.type == KEYDOWN and event.key == K_3:
                 self.showP1Pressed = False
                 self.showP2Pressed = False
-            elif event.type == KEYDOWN and event.key == K_4:
-                self.objectLocked = True
+                self.objectLocked = False
+            elif event.type == KEYDOWN and event.key == K_4 and self.objectLocked:
                 if self.showP1Pressed:
                     self.showP1Pressed = False
                     self.showP2Pressed = False
                     self.gameManager.hud.set_score(0,self.gameManager.hud.get_score(0)+self.score)
                     self.gameManager.gameState.lastPlayerWon = 0
                     self.showRight = True
+                    self.sound.playWin()
                 else:
                     self.showP1Pressed = False
                     self.showP2Pressed = False
@@ -338,20 +344,21 @@ class SingleImageGameObject(GameObject):
                 self.showP1Pressed = False
                 self.showP2Pressed = False
                 pygame.time.set_timer(USEREVENT+1,1500)
-            elif event.type == KEYDOWN and event.key == K_5:
-                self.objectLocked = True
+            elif event.type == KEYDOWN and event.key == K_5 and self.objectLocked:
                 if self.showP2Pressed:
                     self.showP1Pressed = False
                     self.showP2Pressed = False
                     self.showWrong = True
                     self.gameManager.hud.set_score(0,self.gameManager.hud.get_score(0)+self.score)
                     self.gameManager.gameState.lastPlayerWon = 0
+                    self.sound.playFail()
                 else:
                     self.showP1Pressed = False
                     self.showP2Pressed = False
                     self.showWrong = True
                     self.gameManager.hud.set_score(1,self.gameManager.hud.get_score(1)+self.score)
                     self.gameManager.gameState.lastPlayerWon = 1
+                    self.sound.playFail()
                 self.showP1Pressed = False
                 self.showP2Pressed = False
                 pygame.time.set_timer(USEREVENT+1,1500)
@@ -403,16 +410,19 @@ class WhoIsLyingGameObject(GameObject):
 
         for event in events:
             if event.type == KEYDOWN and event.key == K_1 and not self.objectLocked:
+                self.sound.playBuzzer()
                 self.showP1Pressed = True
                 self.objectLocked = True
-                pygame.time.set_timer(USEREVENT+1,1000)
+                pygame.time.set_timer(USEREVENT+1,2000)
             elif event.type == KEYDOWN and event.key == K_2 and not self.objectLocked:
+                self.sound.playBuzzer()
                 self.showP2Pressed = True
                 self.objectLocked = True
-                pygame.time.set_timer(USEREVENT+1,1000)
+                pygame.time.set_timer(USEREVENT+1,2000)
             elif event.type == USEREVENT+1:
                 if self.answerKey[self.answerNum]:
                     self.showRight = True
+                    self.sound.playWin()
                     if self.showP1Pressed:
                         self.gameManager.hud.set_score(0,self.score + self.gameManager.hud.get_score(0))
                         self.gameManager.gameState.lastPlayerWon = 0
@@ -420,6 +430,7 @@ class WhoIsLyingGameObject(GameObject):
                         self.gameManager.hud.set_score(1,self.score + self.gameManager.hud.get_score(1))
                         self.gameManager.gameState.lastPlayerWon = 1
                 else:
+                    self.sound.playFail()
                     self.showWrong = True
                     if self.showP1Pressed:
                         self.gameManager.hud.set_score(1,self.score + self.gameManager.hud.get_score(1))
