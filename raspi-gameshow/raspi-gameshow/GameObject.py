@@ -341,6 +341,7 @@ class SingleImageGameObject(GameObject):
                     self.gameManager.hud.set_score(1,self.gameManager.hud.get_score(1)+self.score)
                     self.gameManager.gameState.lastPlayerWon = 1
                     self.showRight = True
+                    self.sound.playWin()
                 self.showP1Pressed = False
                 self.showP2Pressed = False
                 pygame.time.set_timer(USEREVENT+1,1500)
