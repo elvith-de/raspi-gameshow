@@ -53,6 +53,11 @@ class GameFileLoader(threading.Thread):
                 answerList.append(answer)
             #TODO
             return GameData.WhoIsLyingGameData(quote,answerList,answerKey,None,score)
+        elif type == "Sound":
+            soundfile = game.find("./sound").attrib["src"]
+            soundfile = os.path.join(self.dataPath,"snd",soundfile)
+            image = os.path.join("data","res","music.png")
+            return GameData.SoundGameData(soundfile,image,score)
 
     def run(self):
         try:

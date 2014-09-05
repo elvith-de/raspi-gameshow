@@ -1,5 +1,6 @@
 import pygame
 import os.path
+from pygame.locals import USEREVENT
 
 class SoundObject(object):
     """description of class"""
@@ -8,6 +9,7 @@ class SoundObject(object):
     buzzer=None
     win=None
     fail=None
+    musicLoaded = False
 
 
     def __init__(self, appdirectory):
@@ -24,15 +26,34 @@ class SoundObject(object):
 
     def playBuzzer(self):
         if self.isAvailable:
-            pygame.mixer.stop()
+            if pygame.mixer.music.get_busy():
+                pygame.mixer.music.pause()
             self.buzzer.play()
 
     def playWin(self):
         if self.isAvailable:
-            pygame.mixer.stop()
             self.win.play()
 
     def playFail(self):
         if self.isAvailable:
-            pygame.mixer.stop()
             self.fail.play()
+
+    def resetGameObjectSound(self):
+        if self.musicLoaded:
+            pygame.mixer.music.stop()
+        self.musicLoaded = False
+
+    def playGameObjectSound(self,sound):
+        if self.isAvailable:
+            if not self.musicLoaded:
+                print sound
+                pygame.mixer.music.load(sound)
+                pygame.mixer.music.play()
+                pygame.mixer.music.set_endevent(USEREVENT+3)
+                self.musicLoaded = True
+            else:
+                pygame.mixer.music.unpause()
+    def pauseGameObjectSound(self):
+        if self.isAvailable:
+            if self.musicLoaded:
+                pygame.mixer.music.unpause()

@@ -23,6 +23,16 @@ class SingleImageGameData(GameData):
     def __init__(self,image,score):
         return super(SingleImageGameData, self).__init__(image,score,"SingleImageGameData")
 
+class SoundGameData(GameData):
+
+    sound = None
+
+    def __init__(self,sound,image,score):
+        self.sound = sound
+        return super(SoundGameData, self).__init__(image,score,"SoundGameData")
+
+
+
 class WhoIsLyingGameData(GameData):
 
     quote = None

@@ -39,6 +39,7 @@ class GameManager(object):
             self.buttonHandler.unlock()
         self.gameObject = gameObject
         self.gameObject.sound = self.sound
+        self.sound.resetGameObjectSound()
         gameObject.switchedTo()
         self.gameState.save()
 
@@ -75,7 +76,7 @@ class GameManager(object):
         self.gameObject.sound = self.sound
 
     def run(self):
-        try:
+       # try:
             while 1:
                 currentMillis = self.clock.tick(self.targetFPS)
                 events = pygame.event.get()
@@ -87,14 +88,17 @@ class GameManager(object):
                 for event in events:
                     if event.type == QUIT:
                         pygame.display.quit()
+                        self.sound.resetGameObjectSound()
                         return
                     elif event.type == KEYDOWN and event.key == K_ESCAPE:
                         pygame.display.quit()
+                        self.sound.resetGameObjectSound()
                         return
                 if self.needQuit:
                     pygame.display.quit()
+                    self.sound.resetGameObjectSound()
                     return
-        except Exception as e:
-            print e
-            pygame.display.quit()
-            return
+        #except Exception as e:
+         #   print e
+          #  pygame.display.quit()
+           # return

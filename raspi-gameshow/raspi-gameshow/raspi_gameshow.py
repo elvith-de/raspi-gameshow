@@ -98,7 +98,7 @@ def testColor():
 
 
 def main():    
-    try:
+    #try:
         handler = ButtonHandler.ButtonHandler()
         piFaceManager = PiFaceManager.PiFaceManager(handler)
         gameManager = GameManager.GameManager(GameObject.GameObject(None),30,handler,piFaceManager)
@@ -106,10 +106,10 @@ def main():
         gameManager.setCurrentGameObject(gameObject)
         gameManager.run()
         piFaceManager.deactivate()
-    except Exception as e:
-        print e
-        pygame.display.quit()
-        piFaceManager.deactivate()
+   # except Exception as e:
+    #    print e
+     #   pygame.display.quit()
+      #  piFaceManager.deactivate()
 
 if __name__ == '__main__':
     #testInput()

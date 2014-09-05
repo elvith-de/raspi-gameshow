@@ -298,6 +298,8 @@ class MenuGameObject(GameObject):
             gameObject = WhoIsLyingGameObject(gameData)
         elif gameData.type == "ImageRevealGameData":
             gameObject = ImageRevealGameObject(gameData)
+        elif gameData.type == "SoundGameData":
+            gameObject = SoundGameObject(gameData)
         else:
             print "error, type is",gameData.type
         self.gameManager.setCurrentGameObject(gameObject)
@@ -473,7 +475,7 @@ class WhoIsLyingGameObject(GameObject):
     def initialize(self):
         self.background = pygame.surface.Surface((1024,768)).convert()
         self.background.fill((0,0,0))
-        self.font = pygame.font.Font(pygame.font.get_default_font(),45)
+        self.font = pygame.font.Font(pygame.font.get_default_font(),25)
         self.quoteSf = self.font.render(self.quote,True,(255,255,255))
         self.timerSf = pygame.surface.Surface((750,50)).convert()
         self.timerSf.fill((0,255,0))
@@ -525,3 +527,37 @@ class ImageRevealGameObject(SingleImageGameObject):
         self.renderSFList = range(108)
         random.shuffle(self.renderSFList)
         super(ImageRevealGameObject, self).initialize()
+
+
+class SoundGameObject(SingleImageGameObject):
+    
+    goSound = None
+    
+    def __init__(self,gameData):
+        self.goSound = gameData.sound
+        return super(SoundGameObject, self).__init__(gameData)
+
+    def update(self,time,events):
+        for event in events:
+            if event.type == USEREVENT+3:
+                #Draw Game
+                self.showGameDraw = True
+                self.gameManager.gameState.lastPlayerWon = "Draw"
+                pygame.time.set_timer(USEREVENT+1,1500)
+            elif event.type == KEYDOWN and event.key == K_1 and not self.objectLocked:
+                self.sound.pauseGameObjectSound()
+            elif event.type == KEYDOWN and event.key == K_2 and not self.objectLocked:
+                self.sound.pauseGameObjectSound()
+            elif event.type == KEYDOWN and event.key == K_3:
+                self.sound.playGameObjectSound(self.goSound)
+
+        super(SoundGameObject, self).update(time,events)
+
+    def draw(self,screen,callSuper=True):
+        super(SoundGameObject, self).draw(screen)
+        
+    def switchedTo(self):
+        self.sound.playGameObjectSound(self.goSound)
+
+    def initialize(self):
+        super(SoundGameObject, self).initialize()
