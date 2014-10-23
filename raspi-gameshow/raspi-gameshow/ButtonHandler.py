@@ -11,7 +11,7 @@ class ButtonHandler(object):
     def unlock(self):
         self.isLocked = False
         self.lockedButton = None
-        self.piFaceManager.setPlayerButtonColor(0,"off", False)
+        
 
     def pressed(self,pin_num):
         '''
@@ -34,7 +34,6 @@ class ButtonHandler(object):
         elif not self.isLocked and pin_num < 2:
             self.isLocked = True
             self.lockedButton = pin_num
-            self.piFaceManager.setPlayerButtonColor(pin_num,"white",False)
             event = None
             if pin_num == 0:
                 event = pygame.event.Event(KEYDOWN,scancode=2,key=49,unicode=u'1', mod=4096)

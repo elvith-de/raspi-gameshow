@@ -74,11 +74,6 @@ class GameObject(object):
         
         self.initialized = True
 
-
-
-
-
-
 class LoaderGameObject(GameObject):
     
     loader = None
@@ -106,7 +101,6 @@ class LoaderGameObject(GameObject):
         self.logo = pygame.image.load(os.path.join("data","res","logo.png")).convert()
         self.background = pygame.surface.Surface((1024,768)).convert()
         self.font = pygame.font.Font(pygame.font.get_default_font(),45)
-        #pygame.time.set_timer(USEREVENT+1,2000)
         self.loader.start()
         super(LoaderGameObject,self).initialize()
 
@@ -114,11 +108,6 @@ class LoaderGameObject(GameObject):
         if self.textDirty:
             self.createTextSf()
         if not self.loader.isAlive():
-        #for event in events:
-        #    if event.type == USEREVENT+1:
-                #self.gameManager.setCurrentGameObject(ButtonCheckGameObject())
-                #self.gameManager.gameState.fillDummyGameData()
-                #self.gameManager.gameState.menuGameData = GameData.MenuGameData(["intakt","Action","Bilder","Wer lügt?","Blatest"],None,None)
                 self.gameManager.gameState.menu = MenuGameObject(self.gameManager.gameState.menuGameData)
                 self.gameManager.setCurrentGameObject(self.gameManager.gameState.menu)
 
@@ -164,6 +153,7 @@ class ButtonCheckGameObject(GameObject):
                 pygame.time.set_timer(USEREVENT+1,2000)
                 self.gameManager.hud.set_score(0,self.gameManager.hud.get_score(0)+128)
                 self.gameManager.hud.set_bo5score(0,self.gameManager.hud.get_bo5score(0)+1)
+                self.gameManager.piFaceManager.setPlayerButtonColor(0,"blue")
             elif event.type == KEYDOWN and event.key == K_2:
                 self.text = "Player 2"
                 self.color = (255,255,0)
@@ -171,12 +161,14 @@ class ButtonCheckGameObject(GameObject):
                 pygame.time.set_timer(USEREVENT+1,2000)
                 self.gameManager.hud.set_score(1,self.gameManager.hud.get_score(1)+128)
                 self.gameManager.hud.set_bo5score(1,self.gameManager.hud.get_bo5score(1)+1)
+                self.gameManager.piFaceManager.setPlayerButtonColor(1,"yellow")
             elif event.type == USEREVENT+1:
                 pygame.time.set_timer(USEREVENT+1,0)
                 self.text = "press buzzer"
                 self.color = (0,0,0)
                 self.textColor = (255,255,255)
                 self.gameManager.buttonHandler.unlock()
+                self.gameManager.piFaceManager.setPlayerButtonColor(0,"off")
         if callSuper:
             super(ButtonCheckGameObject, self).update(time,events)
         
@@ -321,14 +313,17 @@ class SingleImageGameObject(GameObject):
                 self.sound.playBuzzer()
                 self.showP1Pressed = True
                 self.objectLocked = True
+                self.gameManager.piFaceManager.setPlayerButtonColor(0,"blue")
             elif event.type == KEYDOWN and event.key == K_2 and not self.objectLocked:
                 self.sound.playBuzzer()
                 self.showP2Pressed = True
                 self.objectLocked = True
+                self.gameManager.piFaceManager.setPlayerButtonColor(1,"yellow")
             elif event.type == KEYDOWN and event.key == K_3:
                 self.showP1Pressed = False
                 self.showP2Pressed = False
                 self.objectLocked = False
+                self.gameManager.piFaceManager.setPlayerButtonColor(0,"off")
             elif event.type == KEYDOWN and event.key == K_4 and self.objectLocked:
                 if self.showP1Pressed:
                     self.showP1Pressed = False
@@ -337,6 +332,8 @@ class SingleImageGameObject(GameObject):
                     self.gameManager.gameState.lastPlayerWon = 0
                     self.showRight = True
                     self.sound.playWin()
+                    self.gameManager.piFaceManager.setPlayerButtonColor(0,"green")
+                    self.gameManager.piFaceManager.setPlayerButtonColor(1,"red", True)
                 else:
                     self.showP1Pressed = False
                     self.showP2Pressed = False
@@ -344,6 +341,8 @@ class SingleImageGameObject(GameObject):
                     self.gameManager.gameState.lastPlayerWon = 1
                     self.showRight = True
                     self.sound.playWin()
+                    self.gameManager.piFaceManager.setPlayerButtonColor(0,"red")
+                    self.gameManager.piFaceManager.setPlayerButtonColor(1,"green", True)
                 self.showP1Pressed = False
                 self.showP2Pressed = False
                 pygame.time.set_timer(USEREVENT+1,1500)
@@ -355,6 +354,8 @@ class SingleImageGameObject(GameObject):
                     self.gameManager.hud.set_score(0,self.gameManager.hud.get_score(0)+self.score)
                     self.gameManager.gameState.lastPlayerWon = 0
                     self.sound.playFail()
+                    self.gameManager.piFaceManager.setPlayerButtonColor(1,"red")
+                    self.gameManager.piFaceManager.setPlayerButtonColor(0,"green", True)
                 else:
                     self.showP1Pressed = False
                     self.showP2Pressed = False
@@ -362,6 +363,8 @@ class SingleImageGameObject(GameObject):
                     self.gameManager.hud.set_score(1,self.gameManager.hud.get_score(1)+self.score)
                     self.gameManager.gameState.lastPlayerWon = 1
                     self.sound.playFail()
+                    self.gameManager.piFaceManager.setPlayerButtonColor(0,"red")
+                    self.gameManager.piFaceManager.setPlayerButtonColor(1,"green", True)
                 self.showP1Pressed = False
                 self.showP2Pressed = False
                 pygame.time.set_timer(USEREVENT+1,1500)
@@ -417,11 +420,13 @@ class WhoIsLyingGameObject(GameObject):
                 self.showP1Pressed = True
                 self.objectLocked = True
                 pygame.time.set_timer(USEREVENT+1,2000)
+                self.gameManager.piFaceManager.setPlayerButtonColor(0,"blue")
             elif event.type == KEYDOWN and event.key == K_2 and not self.objectLocked:
                 self.sound.playBuzzer()
                 self.showP2Pressed = True
                 self.objectLocked = True
                 pygame.time.set_timer(USEREVENT+1,2000)
+                self.gameManager.piFaceManager.setPlayerButtonColor(1,"yellow")
             elif event.type == USEREVENT+1:
                 if self.answerKey[self.answerNum]:
                     self.showRight = True
@@ -429,18 +434,26 @@ class WhoIsLyingGameObject(GameObject):
                     if self.showP1Pressed:
                         self.gameManager.hud.set_score(0,self.score + self.gameManager.hud.get_score(0))
                         self.gameManager.gameState.lastPlayerWon = 0
+                        self.gameManager.piFaceManager.setPlayerButtonColor(0,"green")
+                        self.gameManager.piFaceManager.setPlayerButtonColor(1,"red",True)
                     elif self.showP2Pressed:
                         self.gameManager.hud.set_score(1,self.score + self.gameManager.hud.get_score(1))
                         self.gameManager.gameState.lastPlayerWon = 1
+                        self.gameManager.piFaceManager.setPlayerButtonColor(1,"green")
+                        self.gameManager.piFaceManager.setPlayerButtonColor(0,"red",True)
                 else:
                     self.sound.playFail()
                     self.showWrong = True
                     if self.showP1Pressed:
                         self.gameManager.hud.set_score(1,self.score + self.gameManager.hud.get_score(1))
                         self.gameManager.gameState.lastPlayerWon = 1
+                        self.gameManager.piFaceManager.setPlayerButtonColor(1,"green")
+                        self.gameManager.piFaceManager.setPlayerButtonColor(0,"red",True)
                     if self.showP2Pressed:
                         self.gameManager.hud.set_score(0,self.score + self.gameManager.hud.get_score(0))
                         self.gameManager.gameState.lastPlayerWon = 0
+                        self.gameManager.piFaceManager.setPlayerButtonColor(0,"green")
+                        self.gameManager.piFaceManager.setPlayerButtonColor(1,"red",True)
                 self.showP1Pressed = False
                 self.showP2Pressed = False
                 pygame.time.set_timer(USEREVENT+1,0)

@@ -40,6 +40,7 @@ class GameManager(object):
         self.gameObject = gameObject
         self.gameObject.sound = self.sound
         self.sound.resetGameObjectSound()
+        self.piFaceManager.setPlayerButtonColor(0,"off")
         gameObject.switchedTo()
         self.gameState.save()
 
@@ -58,7 +59,7 @@ class GameManager(object):
 
     def initialize(self):
         pygame.init()
-        self.screen = pygame.display.set_mode((1024,768),pygame.DOUBLEBUF|pygame.HWSURFACE)
+        self.screen = pygame.display.set_mode((1024,768),pygame.DOUBLEBUF|pygame.HWSURFACE|pygame.FULLSCREEN)
         pygame.mouse.set_visible(True)
         self.buffer = pygame.Surface(self.screen.get_size())
         self.buffer = self.buffer.convert()

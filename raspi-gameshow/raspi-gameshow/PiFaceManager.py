@@ -26,15 +26,18 @@ class PiFaceManager(object):
     def setPlayerButtonColor(self,player,color, keep=False):
         print "Set player",player,"to color",color
         if not keep:
-            print "Set all ports to 0"
+            #print "Set all ports to 0"
             if piFaceAvail:
                 self.pifacedigital.output_port.all_off()
         player = player * 3
+        if piFaceAvail:
+            for i in range(3):
+                self.pifacedigital.leds[player+i].set_low()
         pins = colors[color]
         if pins is not None:
             for pin in pins:
                 if pin is not None:
-                    print "Set Port",(player+pin),"to high"
+                    #print "Set Port",(player+pin),"to high"
                     if piFaceAvail:
                         self.pifacedigital.leds[player+pin].set_high()
 
