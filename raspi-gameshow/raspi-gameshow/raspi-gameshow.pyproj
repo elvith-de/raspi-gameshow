@@ -14,7 +14,7 @@
     <RootNamespace>raspi-gameshow</RootNamespace>
     <IsWindowsApplication>False</IsWindowsApplication>
     <LaunchProvider>Standard Python launcher</LaunchProvider>
-    <CommandLineArguments>data\intakt\intakt-VV.xml --new-game</CommandLineArguments>
+    <CommandLineArguments>data\marc\marc.xml --new-game</CommandLineArguments>
     <InterpreterPath />
     <InterpreterArguments />
     <EnableNativeCodeDebugging>False</EnableNativeCodeDebugging>
@@ -44,12 +44,43 @@
     <Folder Include="data\" />
     <Folder Include="data\intakt\" />
     <Folder Include="data\intakt\img\" />
+    <Folder Include="data\intakt\snd\" />
+    <Folder Include="data\marc\" />
+    <Folder Include="data\marc\img\" />
+    <Folder Include="data\marc\snd\" />
     <Folder Include="data\res\" />
     <Folder Include="data\test\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="data\intakt\img\action.100.schokokuss.png" />
+    <Content Include="data\intakt\img\action.200.topfschlagen.png" />
+    <Content Include="data\intakt\img\action.300.roboter.png" />
+    <Content Include="data\intakt\img\action.400.buchstabenspiel.png" />
+    <Content Include="data\intakt\img\action.500.swish.png" />
+    <Content Include="data\intakt\img\blamieren.png" />
+    <Content Include="data\intakt\img\glaubensfragen.100.png" />
+    <Content Include="data\intakt\img\glaubensfragen.200.png" />
+    <Content Include="data\intakt\img\glaubensfragen.300.png" />
+    <Content Include="data\intakt\img\glaubensfragen.400.png" />
+    <Content Include="data\intakt\img\glaubensfragen.500.png" />
+    <Content Include="data\intakt\img\MISSING.png" />
     <Content Include="data\intakt\intakt-VV.save.xml" />
     <Content Include="data\intakt\intakt-VV.xml" />
+    <Content Include="data\intakt\snd\harry_potter.ogg" />
+    <Content Include="data\intakt\snd\indiana_jones.ogg" />
+    <Content Include="data\intakt\snd\james_bond.ogg" />
+    <Content Include="data\intakt\snd\pirates.ogg" />
+    <Content Include="data\intakt\snd\starwars.ogg" />
+    <Content Include="data\marc\Buchstabenspiel.docx" />
+    <Content Include="data\marc\img\blamieren.png" />
+    <Content Include="data\marc\img\MISSING.png" />
+    <Content Include="data\marc\marc.xml" />
+    <Content Include="data\marc\Moderation.docx" />
+    <Content Include="data\marc\snd\harry_potter.ogg" />
+    <Content Include="data\marc\snd\indiana_jones.ogg" />
+    <Content Include="data\marc\snd\james_bond.ogg" />
+    <Content Include="data\marc\snd\pirates.ogg" />
+    <Content Include="data\marc\snd\starwars.ogg" />
     <Content Include="data\res\171670__fins__success-2.wav" />
     <Content Include="data\res\186896__mrmacross__negativebuzz.mp3" />
     <Content Include="data\res\244932__kwahmah-02__short-buzzer.wav" />

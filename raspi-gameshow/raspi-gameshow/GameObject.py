@@ -513,13 +513,17 @@ class ImageRevealGameObject(SingleImageGameObject):
     def update(self,time,events):
         for event in events:
             if event.type == USEREVENT+2:
-                self.renderSFList.remove(self.renderSFList[0])
+                if len(self.renderSFList) > 0:
+                    self.renderSFList.remove(self.renderSFList[0])
             elif event.type == KEYDOWN and event.key == K_1 and not self.objectLocked:
                 pygame.time.set_timer(USEREVENT+2,0)
             elif event.type == KEYDOWN and event.key == K_2 and not self.objectLocked:
                 pygame.time.set_timer(USEREVENT+2,0)
             elif event.type == KEYDOWN and event.key == K_3:
-                pygame.time.set_timer(USEREVENT+2,1000)
+                pygame.time.set_timer(USEREVENT+2,700)
+        if self.showRight or self.showWrong:
+            if len(self.renderSFList) > 0:
+                self.renderSFList = []
         super(ImageRevealGameObject, self).update(time,events)
 
     def draw(self,screen,callSuper=True):
@@ -531,7 +535,7 @@ class ImageRevealGameObject(SingleImageGameObject):
         self.drawButtonPressOverlay(screen)
         
     def switchedTo(self):
-        pygame.time.set_timer(USEREVENT+2,1000)
+        pygame.time.set_timer(USEREVENT+2,700)
         super(ImageRevealGameObject, self).switchedTo()
     
     def initialize(self):
