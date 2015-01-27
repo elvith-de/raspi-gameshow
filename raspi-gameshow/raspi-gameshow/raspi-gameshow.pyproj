@@ -14,7 +14,7 @@
     <RootNamespace>raspi-gameshow</RootNamespace>
     <IsWindowsApplication>False</IsWindowsApplication>
     <LaunchProvider>Standard Python launcher</LaunchProvider>
-    <CommandLineArguments>data\marc\marc.xml --new-game</CommandLineArguments>
+    <CommandLineArguments>--test-install</CommandLineArguments>
     <InterpreterPath />
     <InterpreterArguments />
     <EnableNativeCodeDebugging>False</EnableNativeCodeDebugging>

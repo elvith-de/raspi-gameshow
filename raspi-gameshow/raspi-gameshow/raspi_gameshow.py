@@ -98,7 +98,16 @@ def testColor():
 
 
 def main():    
-    #try:
+    test = False
+    for i in range(1,len(sys.argv)):
+        print sys.argv[i]
+        if sys.argv[i] == "--test-install":
+            test = True
+            print "Test"
+    if test:
+        gameManager = GameManager.GameManager(GameObject.GameObject(None),30,None,None,True)
+    else:
+        #try:
         handler = ButtonHandler.ButtonHandler()
         piFaceManager = PiFaceManager.PiFaceManager(handler)
         gameManager = GameManager.GameManager(GameObject.GameObject(None),30,handler,piFaceManager)

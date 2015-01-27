@@ -17,17 +17,21 @@ class GameManager(object):
     hud = HUD.HUD()
     drawHUD = True
     piFaceManager = None
-    gameState = GameStateSaver.GameStateSaver()
+    gameState = None
     needQuit = False
     sound = None
 
-    def __init__(self,initialGameObject,targetFPS,buttonHandler,piFaceManager):
-        self.gameObject = initialGameObject
-        self.hud.gameState = self.gameState
-        self.targetFPS = targetFPS
-        self.buttonHandler = buttonHandler
-        self.piFaceManager = piFaceManager
-        self.initialize()
+    def __init__(self,initialGameObject,targetFPS,buttonHandler,piFaceManager, test=False):
+        if test:
+            self.initializeTest()
+        else:
+            self.gameState = GameStateSaver.GameStateSaver()
+            self.gameObject = initialGameObject
+            self.hud.gameState = self.gameState
+            self.targetFPS = targetFPS
+            self.buttonHandler = buttonHandler
+            self.piFaceManager = piFaceManager
+            self.initialize()
         return super(GameManager, self).__init__()
 
     def setCurrentGameObject(self,gameObject):
@@ -76,6 +80,65 @@ class GameManager(object):
         self.sound = SoundObject.SoundObject(self.gameState.appdir)
         self.gameObject.sound = self.sound
 
+    def initializeTest(self):
+        pygame.init()
+        self.screen = pygame.display.set_mode((1024,768),pygame.DOUBLEBUF|pygame.HWSURFACE)
+        pygame.mouse.set_visible(True)
+        self.buffer = pygame.Surface(self.screen.get_size())
+        self.buffer = self.buffer.convert()
+        self.buffer.fill((250, 0, 250))
+        self.screen.blit(self.buffer, (0, 0))
+        pygame.display.flip()
+        print "Using driver",pygame.display.get_driver()
+        print "Set SDL_VIDEODRIVER to change"
+        print "-----------------------------"
+        print "Driver Info:"
+        print pygame.display.Info()
+        self.clock = pygame.time.Clock()
+
+        font = pygame.font.Font(pygame.font.get_default_font(),45)
+        size = font.size("OK")
+        r=0
+        g=0
+        b=255
+        tor = True
+        tog = False
+        tob = False
+
+        while 1:
+                if tor:
+                    r+=1
+                    b-=1
+                    if b==0:
+                        tor=False
+                        tog=True
+                if tog:
+                    g+=1
+                    r-=1
+                    if r==0:
+                        tog=False
+                        tob=True
+                if tob:
+                    b+=1
+                    g-=1
+                    if g==0:
+                        tob=False
+                        tor=True
+                currentMillis = self.clock.tick(self.targetFPS)
+                events = pygame.event.get()
+                self.buffer.fill((r, g, b))
+                self.buffer.blit(font.render("OK",True,(255,255,255)),((1024-size[0])/2,(768-size[1])/2))
+                self.screen.blit(self.buffer, (0, 0))
+                pygame.display.flip()
+
+        #Handle Input Events - FOR TESTING ONLY - Events have to be checked by the GameObjects...
+                for event in events:
+                    if event.type == QUIT:
+                        pygame.display.quit()
+                        return
+                    elif event.type == KEYDOWN and event.key == K_ESCAPE:
+                        pygame.display.quit()
+                        return
     def run(self):
        # try:
             while 1:
